@@ -1,0 +1,54 @@
+In conversation with The RealReal: Unlocking sales potential with Zoom Revenue Accelerator
+
+
+In this exclusive fireside chat at Zoomtopia 2024, we sat down with Samuel Abraham, head of revenue technology at The RealReal, and Madison Muchow, manager of Zoom Revenue Accelerator GTM, to discuss their experiences with our conversational sales intelligence software, Zoom Revenue Accelerator (ZRA). Let’s dive into the conversation and learn how this technology is turning The RealReal’s sales process on its head and empowering its sales teams.
+
+Q: Samuel, what led The RealReal to choose Zoom as your provider?
+
+Well, in the past, I implemented Zoom in various companies of all sizes, from startups to larger companies, so I was excited to do the same at The RealReal. We were looking for a scalable solution with a robust infrastructure that offered forward-facing technology like AI. Zoom met these criteria and had a solid implementation team I could rely on. After a lot of deep analysis and seeing and understanding the value of the investments that Zoom is putting into its AI-based features, it became a no-brainer. We knew Zoom was a trusted name that could grow with us and help take our business to the next level.
+
+Q: Madison, what challenges did you find The RealReal was facing before implementing ZRA?
+
+It’s always essential to understand our customers thoroughly to find the best solution for their needs. Through our discovery process, we learned that The RealReal was dealing with inefficient data structuring, time wasted hunting for information, and duplication of activities through their Salesforce integration. Customer messages sometimes went unanswered and leaders were spending too much time on manual reporting. From this evaluation, we realized there was a lot of opportunity for ZRA to impact The RealReal’s sales organization.
+
+Q. Samuel, how critical was it for your chosen solution to have features like scalability and integrations with Salesforce?
+
+This was really important for us. This was another reason we chose Zoom as our provider, we needed a partner that could support our scalability and grow with us. While our previous provider was sufficient, Zoom offered advanced features, like AI integration, that addressed our needs without requiring custom development. Their technology, roadmap, and commitment to innovation also aligned with our business goals. From the outset, we were looking for more than just a service provider—we needed a partner to help us grow, solve issues efficiently, and guide us strategically. We were impressed by Zoom’s infrastructure and forward-looking vision, which made ZRA the right fit for our journey.
+
+
+The RealReal now has 19 retail locations, 16 of which are shoppable.
+
+
+Q. Madison, do you have anything to add from your point of view?
+
+What stood out was the unique way The RealReal’s team communicates, primarily through SMS, with consigners. This posed challenges when handling out-of-office responses. If a text comes through when someone is not available, how can they make sure the consignor receives a response? We partnered with The RealReal to integrate SMS into the interaction history, allowing the team to track communication seamlessly in ZRA. This meant working closely with the team to implement risk signals, ensuring that an email alert is sent to notify if there’s been no interaction within a set period. We had a lot of fun working with The RealReal, tweaking and adapting our product to meet their needs.
+
+Q: That’s great to hear. From your perspective, Samuel, how has ZRA impacted your sales teams?
+
+The response has been overwhelmingly positive, I have to say. ZRA has brought notable change to the company. Our teams love features like engagement scores, sentiment analysis, and filler word tracking, which tracks things like “ums” and “ahs” during customer interactions. We’ve incorporated these metrics into our dashboards in tools like Salesforce, allowing leaders to evaluate team performance in real time and highlight successful conversations. Everyone is excited about these scores and translating them into growth metrics.
+
+Q: Madison, how does The RealReal’s experience compare to other customers you work with?
+
+It’s pretty in line with what I’m hearing. One of the core values of ZRA is in the data. It’s unbiased, and it's bountiful, to say the least! What I really love about working with The RealReal is their customer-centric culture. The executive leadership was so excited about the potential of ZRA to not only coach, but to coach strategically. They’re doing this by using features like keyword indicators to identify and drive upsell opportunities. The ability to quickly review previous interactions has also helped them take a more personalized approach. For example, they can see the customer/prospect was talking about a trip in the last call and bring it up in the current engagement. It just creates a warmer, differentiated experience.
+
+Another feature they’re enjoying at The RealReal is being able to share learnings on the fly. In previous lives, they would take a clip and put it in chat, and maybe some people would see it. But now, with ZRA, they can tag someone in real-time and say, “Hey, everybody, check this out. I just heard this.” It gives them time to learn and implement what they learned in two seconds.
+
+Q: The power of real-time learning, I love that. Samuel, tell us, what tangible benefits have you seen since implementing ZRA?
+
+While I can’t share specific numbers, we’ve seen decreased maintenance costs and improved system stability. Since the infrastructure’s been set up, it stays up and doesn’t go down. We’re also seeing significant productivity gains. Our reps can now quickly access AI-generated customer interaction summaries for guidance on handling a call before they jump on. That’s a saving right there. They’re saving lots of time, allowing them to service more customers effectively. That’s huge for us.
+
+Q: Great to hear about the time you’re all saving. Are there particular features of ZRA’s roadmap that you’re excited about?
+
+Samuel: Tough question, but I’d say we’re particularly interested in the ZRA dialer for mass uploading lists and auto-dialing. With this feature, you can leave voicemails and see all calls via a dashboard and analytics, providing a complete view of how the market is behaving. This is super exciting because it can help us course-correct our business, based on well-rounded insights.
+
+The second is the conversational explorer, which provides AI-powered insights from recorded conversations. This will enable our leadership to get quick answers on specific conversations and train the team with their learnings.
+
+These features will not only provide cost savings but also help us improve how we conduct business in the future.
+
+Madison: I totally agree with Samuel; these are the foundational blocks that drive more coaching and more efficient processes. We strive to design all our features with the goal of reducing sales cycles and speeding up customer training.
+
+One feature I also love is automated scoring. Everyone loves the idea of scorecards, but who has time to go back and listen to an entire call to score it? The scorecard automates the scoring process, saving team leads significant time by providing quick, objective feedback to employees.
+
+Watch the full conversation with Samuel Abrahams from The RealReal and all the Zoomtopia 2024 sessions on demand here.
+
+We’d love to share how Zoom Revenue Accelerator can boost revenue and empower your sales organization. Reach out today, and one of our experts will be happy to discuss what ZRA can do for your business.

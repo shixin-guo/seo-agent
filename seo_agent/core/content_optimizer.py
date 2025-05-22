@@ -49,32 +49,165 @@ class ContentOptimizer:
 
     def _analyze_content(self, content: str, keywords: list[str]) -> dict[str, Any]:
         """Analyze content for SEO factors"""
-        # Placeholder implementation
-        # This would use DSPy modules in a real implementation
+        """Analyze content for SEO factors"""
+        # Calculate word count
+        words = content.split()
+        word_count = len(words)
+
+        # Calculate keyword density
+        keyword_density = {}
+        if keywords:
+            content_lower = content.lower()
+            for keyword in keywords:
+                if not keyword:
+                    continue
+                keyword_lower = keyword.lower()
+                # Count occurrences
+                count = content_lower.count(keyword_lower)
+                if count > 0:
+                    density = (
+                        (count * len(keyword_lower.split())) / max(1, word_count) * 100
+                    )
+                    keyword_density[keyword] = {
+                        "count": count,
+                        "density": round(density, 2),
+                    }
+
+        # Simple readability estimate based on word length
+        avg_word_length = sum(len(word) for word in words) / max(1, word_count)
+        if avg_word_length > 7:
+            readability = "complex"
+        elif avg_word_length > 5:
+            readability = "medium"
+        else:
+            readability = "simple"
+
+        # Count headings (markdown style)
+        heading_count = 0
+        for line in content.split("\n"):
+            if line.strip().startswith("#"):
+                heading_count += 1
+
         return {
-            "word_count": len(content.split()),
-            "keyword_density": {},
-            "readability": "medium",
-            "headings": 0,
+            "word_count": word_count,
+            "keyword_density": keyword_density,
+            "readability": readability,
+            "headings": heading_count,
             "meta_tags": {},
+            "avg_word_length": round(avg_word_length, 2),
         }
 
     def _generate_suggestions(
         self, content: str, analysis: dict[str, Any]
     ) -> list[dict[str, Any]]:
         """Generate optimization suggestions"""
-        # Placeholder implementation
-        return [
-            {"type": "heading", "suggestion": "Add more headings to break up content"},
-            {
-                "type": "keyword",
-                "suggestion": "Increase keyword density for primary keywords",
-            },
-        ]
+        suggestions = []
+
+        # Check word count
+        word_count = analysis.get("word_count", 0)
+        if word_count < 300:
+            suggestions.append(
+                {
+                    "type": "length",
+                    "suggestion": f"Content is too short ({word_count} words). Aim for at least 300 words for better SEO.",
+                }
+            )
+
+        # Check headings
+        heading_count = analysis.get("headings", 0)
+        if heading_count == 0:
+            suggestions.append(
+                {
+                    "type": "heading",
+                    "suggestion": "Add headings (using # in markdown) to structure your content and improve readability.",
+                }
+            )
+        elif word_count > 300 and heading_count < 2:
+            suggestions.append(
+                {
+                    "type": "heading",
+                    "suggestion": f"Add more headings. For {word_count} words, aim for at least 3-4 headings.",
+                }
+            )
+
+        # Check keyword usage
+        keyword_density = analysis.get("keyword_density", {})
+        if not keyword_density:
+            suggestions.append(
+                {
+                    "type": "keyword",
+                    "suggestion": "No target keywords found in content. Include relevant keywords to improve SEO.",
+                }
+            )
+        else:
+            # Suggest optimization for low-density keywords
+            low_density_keywords = []
+            for keyword, data in keyword_density.items():
+                if data.get("density", 0) < 0.5:
+                    low_density_keywords.append(keyword)
+
+            if low_density_keywords:
+                suggestions.append(
+                    {
+                        "type": "keyword",
+                        "suggestion": f"Increase usage of these keywords: {', '.join(low_density_keywords[:3])}",
+                    }
+                )
+
+            # Check for overly dense keywords
+            high_density_keywords = []
+            for keyword, data in keyword_density.items():
+                if data.get("density", 0) > 5.0:
+                    high_density_keywords.append(keyword)
+
+            if high_density_keywords:
+                suggestions.append(
+                    {
+                        "type": "keyword_stuffing",
+                        "suggestion": f"Keyword stuffing detected. Reduce usage of: {', '.join(high_density_keywords)}",
+                    }
+                )
+
+        # Readability suggestions
+        readability = analysis.get("readability", "medium")
+        if readability == "complex":
+            suggestions.append(
+                {
+                    "type": "readability",
+                    "suggestion": "Content is complex. Consider simplifying language for better readability.",
+                }
+            )
+
+        return suggestions
 
     def _apply_suggestions(
         self, content: str, suggestions: list[dict[str, Any]]
     ) -> str:
         """Apply suggestions to create optimized content"""
-        # Placeholder implementation - would be more sophisticated in real version
-        return content
+        # Note: This is a simplified implementation.
+        # In a real-world scenario, you would integrate with a language model like GPT
+        # to intelligently rewrite content based on suggestions.
+
+        # If there are no suggestions, the content is already optimized
+        if not suggestions:
+            return content
+
+        # For now, we'll just add optimization notes at the top of the content
+        optimization_notes = []
+        optimization_notes.append("# SEO OPTIMIZATION NOTES")
+        optimization_notes.append(
+            "The following suggestions should be applied to improve SEO:"
+        )
+
+        for idx, suggestion in enumerate(suggestions, 1):
+            suggestion_type = suggestion.get("type", "general")
+            suggestion_text = suggestion.get("suggestion", "")
+            optimization_notes.append(
+                f"{idx}. [{suggestion_type.upper()}] {suggestion_text}"
+            )
+
+        # Only include the notes if there are suggestions
+        if suggestions:
+            return "\n".join(optimization_notes)
+        else:
+            return content

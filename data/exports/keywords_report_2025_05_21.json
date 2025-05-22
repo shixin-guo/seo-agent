@@ -1,0 +1,101 @@
+{
+  "seed_keyword": "digital marketing",
+  "industry": "saas",
+  "total_keywords": 15,
+  "keywords": [
+    {
+      "keyword": "1. \"Digital marketing strategies for SaaS\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "2. \"SaaS digital marketing agency\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "3. \"Best digital marketing tools for SaaS\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "4. \"Digital marketing trends in SaaS 2023\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "5. \"SaaS growth with digital marketing\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "6. \"How to create a digital marketing plan for SaaS\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "7. \"Digital marketing ROI for SaaS companies\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "8. \"SaaS digital marketing case studies\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "9. \"Email marketing strategies for SaaS\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "10. \"SEO best practices for SaaS websites\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "11. \"Social media marketing for SaaS\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "12. \"Content marketing tips for SaaS businesses\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "13. \"PPC advertising for SaaS platforms\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "14. \"Influencer marketing in the SaaS industry\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "15. \"SaaS digital marketing benchmarks\" - Search Intent",
+      "intent": "informational",
+      "competition": "medium"
+    }
+  ],
+  "intent_groups": {
+    "informational": [
+      "1. \"Digital marketing strategies for SaaS\" - Search Intent",
+      "2. \"SaaS digital marketing agency\" - Search Intent",
+      "3. \"Best digital marketing tools for SaaS\" - Search Intent",
+      "4. \"Digital marketing trends in SaaS 2023\" - Search Intent",
+      "5. \"SaaS growth with digital marketing\" - Search Intent",
+      "6. \"How to create a digital marketing plan for SaaS\" - Search Intent",
+      "7. \"Digital marketing ROI for SaaS companies\" - Search Intent",
+      "8. \"SaaS digital marketing case studies\" - Search Intent",
+      "9. \"Email marketing strategies for SaaS\" - Search Intent",
+      "10. \"SEO best practices for SaaS websites\" - Search Intent",
+      "11. \"Social media marketing for SaaS\" - Search Intent",
+      "12. \"Content marketing tips for SaaS businesses\" - Search Intent",
+      "13. \"PPC advertising for SaaS platforms\" - Search Intent",
+      "14. \"Influencer marketing in the SaaS industry\" - Search Intent",
+      "15. \"SaaS digital marketing benchmarks\" - Search Intent"
+    ]
+  }
+}

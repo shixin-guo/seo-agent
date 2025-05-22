@@ -84,6 +84,109 @@ def sample_backlink_data() -> dict[str, Any]:
 
 
 @pytest.fixture
+def sample_improved_backlink_data() -> dict[str, Any]:
+    """Return sample improved backlink data for testing."""
+    return {
+        "domain": "example.com",
+        "backlinks": [
+            {
+                "source_domain": "blog.example.org",
+                "source_url": "https://blog.example.org/post1",
+                "target_url": "https://example.com/page1",
+                "anchor_text": "useful resource",
+                "link_type": "dofollow",
+                "domain_authority": 45,
+                "first_seen": "2024-01-15",
+                "category": "technology",
+            },
+            {
+                "source_domain": "news.example.net",
+                "source_url": "https://news.example.net/article2",
+                "target_url": "https://example.com",
+                "anchor_text": "industry leader",
+                "link_type": "dofollow",
+                "domain_authority": 60,
+                "first_seen": "2024-02-20",
+                "category": "business",
+            },
+            {
+                "source_domain": "review.example.com",
+                "source_url": "https://review.example.com/tools",
+                "target_url": "https://example.com/product",
+                "anchor_text": "top solution",
+                "link_type": "nofollow",
+                "domain_authority": 35,
+                "first_seen": "2024-03-10",
+                "category": "marketing",
+            },
+        ],
+        "competitors": {
+            "competitor1.com": {
+                "backlinks": [
+                    {
+                        "source_domain": "blog.example.org",
+                        "source_url": "https://blog.example.org/post1",
+                        "target_url": "https://competitor1.com/page1",
+                        "anchor_text": "alternative solution",
+                        "link_type": "dofollow",
+                        "domain_authority": 45,
+                        "first_seen": "2024-01-20",
+                        "category": "technology",
+                    },
+                    {
+                        "source_domain": "resource.example.com",
+                        "source_url": "https://resource.example.com/list",
+                        "target_url": "https://competitor1.com",
+                        "anchor_text": "market leader",
+                        "link_type": "dofollow",
+                        "domain_authority": 55,
+                        "first_seen": "2024-02-15",
+                        "category": "business",
+                    },
+                ],
+                "metrics": {
+                    "domain_authority": 52,
+                    "page_authority": 48,
+                    "referring_domains": 230,
+                    "total_backlinks": 1200,
+                },
+            }
+        },
+        "metrics": {
+            "domain_authority": 48,
+            "page_authority": 45,
+            "trust_flow": 35,
+            "citation_flow": 40,
+            "referring_domains": 180,
+            "total_backlinks": 950,
+        },
+        "opportunities": [
+            {
+                "source_domain": "resource.example.com",
+                "source_url": "https://resource.example.com/list",
+                "target_url": "https://competitor1.com",
+                "anchor_text": "market leader",
+                "link_type": "dofollow",
+                "domain_authority": 55,
+                "first_seen": "2024-02-15",
+                "category": "business",
+                "competitor": "competitor1.com",
+                "opportunity_type": "competitor_backlink",
+                "opportunity_score": 45,
+            }
+        ],
+        "summary": {
+            "total_backlinks": 3,
+            "dofollow_count": 2,
+            "nofollow_count": 1,
+            "unique_domains": 3,
+            "total_opportunities": 1,
+            "opportunity_types": {"competitor_backlink": 1},
+        },
+    }
+
+
+@pytest.fixture
 def sample_crawl_results() -> dict[str, Any]:
     """Return sample crawl results for testing site auditor."""
     return {

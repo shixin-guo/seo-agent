@@ -100,7 +100,10 @@ class KeywordGenerator(dspy.Module):
                 from tests.mock.mock_keyword_data import generate_mock_keywords
 
                 mock_data = generate_mock_keywords(seed_keyword, industry or "general")
-                return mock_data["keywords"]
+                keywords_list = mock_data["keywords"]
+                if isinstance(keywords_list, list):
+                    return keywords_list
+                return []  # Return empty list as fallback
 
         # Ensure the returned value is the correct type
         if isinstance(result.keywords, list):
@@ -237,3 +240,89 @@ class SiteAuditor(dspy.Module):
             "issues": [],
             "recommendations": [],
         }
+
+
+class AIContentGenerator(dspy.Module):
+    """A module for generating optimized content using language models.
+
+    Uses DSPy to interface with LLMs for creating SEO-friendly content based on
+    original content and optimization instructions.
+    """
+
+    def __init__(self, config: dict[str, Any]) -> None:
+        """Initialize the AIContentGenerator module.
+
+        Args:
+            config: Configuration dictionary containing AI model and API settings.
+        """
+        super().__init__()
+        self.config = config
+        self.model_name = config.get("ai", {}).get("model", "gpt-4-turbo-preview")
+        self.max_tokens = config.get("ai", {}).get("max_tokens", 3000)
+        self.temperature = config.get("ai", {}).get("temperature", 0.3)
+
+        # Configure DSPy
+        api_key = os.environ.get("OPENAI_API_KEY") or config.get("apis", {}).get(
+            "openai_key"
+        )
+        if api_key:
+            # Add a random seed to each request if available in config
+            random_seed = None
+            if "randomization" in config and "seed" in config["randomization"]:
+                random_seed = config["randomization"]["seed"]
+
+            # Configure with temperature setting (for creativity control)
+            lm_config = {
+                "model": self.model_name,
+                "api_key": api_key,
+                "temperature": self.temperature,
+            }
+
+            # Add seed for OpenAI if available
+            if random_seed is not None:
+                lm_config["seed"] = random_seed
+
+            dspy.settings.configure(lm=LM(**lm_config))
+
+    def generate_optimized_content(
+        self, original_content: str, instructions: str
+    ) -> str:
+        """Generate optimized content based on original content and instructions.
+
+        Args:
+            original_content: The original content to optimize
+            instructions: Specific instructions for optimization
+
+        Returns:
+            The optimized content
+        """
+
+        # Define the signature for content optimization
+        class ContentOptimizationSignature(dspy.Signature):
+            """Generate SEO-optimized content based on original content and optimization guidelines."""
+
+            original_content = dspy.InputField()
+            optimization_guidelines = dspy.InputField(
+                description="Guidelines for optimization"
+            )
+            optimized_content = dspy.OutputField(
+                description="The optimized content that follows all guidelines"
+            )
+
+        # Create predictor
+        content_optimizer = dspy.Predict(ContentOptimizationSignature)
+
+        # Execute prediction
+        result = content_optimizer(
+            original_content=original_content, optimization_guidelines=instructions
+        )
+
+        # Return the optimized content
+        if hasattr(result, "optimized_content") and result.optimized_content:
+            optimized = result.optimized_content
+            if isinstance(optimized, str):
+                return optimized
+            return original_content  # Return original if wrong type
+
+        # Fallback to original content if optimization fails
+        return original_content

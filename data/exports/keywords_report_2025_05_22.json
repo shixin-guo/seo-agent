@@ -1,0 +1,75 @@
+{
+  "seed_keyword": "ai conversation for sales",
+  "industry": "saas",
+  "total_keywords": 10,
+  "keywords": [
+    {
+      "keyword": "AI chatbot for sales",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "Best AI conversation tools for sales",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI conversation platform pricing",
+      "intent": "transactional",
+      "competition": "high"
+    },
+    {
+      "keyword": "How to use AI for sales",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI sales assistant software",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI for sales lead generation",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI conversation tool features for SaaS",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "Implementing AI in sales strategy",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI for improving sales conversions",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "Compare AI sales tools",
+      "intent": "commercial",
+      "competition": "high"
+    }
+  ],
+  "intent_groups": {
+    "informational": [
+      "AI chatbot for sales",
+      "How to use AI for sales",
+      "AI for sales lead generation",
+      "AI conversation tool features for SaaS",
+      "Implementing AI in sales strategy",
+      "AI for improving sales conversions"
+    ],
+    "commercial": [
+      "Best AI conversation tools for sales",
+      "AI sales assistant software",
+      "Compare AI sales tools"
+    ],
+    "transactional": [
+      "AI conversation platform pricing"
+    ]
+  }
+}
