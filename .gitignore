@@ -27,3 +27,6 @@ coverage.xml
 
 # Application data
 data/exports/
+__pycache__/main.cpython-313.pyc
+data/exports/keywords_report_2025_05_22.csv
+data/exports/keywords_report_2025_05_22.json
