@@ -15,10 +15,50 @@ SEO AI Agent is a simplified SEO automation tool designed for technical users wh
 
 ## Installation
 
+### Using Poetry (Recommended)
+
+```bash
+# Install Poetry if you don't have it
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Clone the repository
+git clone https://github.com/yourusername/seo-agent.git
+cd seo-agent
+
+# Install dependencies
+poetry install
+
+# Run the application
+poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
+```
+
+### Using Pipenv
+
+```bash
+# Install Pipenv if you don't have it
+pip install --user pipenv
+
+# Clone the repository
+git clone https://github.com/yourusername/seo-agent.git
+cd seo-agent
+
+# Install dependencies
+pipenv install
+
+# Run the application
+pipenv run python main.py keyword-research --seed "digital marketing" --industry "saas"
+```
+
+### Using pip (Traditional)
+
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/seo-agent.git
 cd seo-agent
+
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -27,11 +67,20 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
+For more dependency management options, see [dependency_management.md](dependency_management.md).
+
 ## Usage
 
 ### Keyword Research
 
 ```bash
+# With Poetry
+poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
+
+# With Pipenv
+pipenv run python main.py keyword-research --seed "digital marketing" --industry "saas"
+
+# Traditional
 python main.py keyword-research --seed "digital marketing" --industry "saas"
 ```
 
@@ -70,6 +119,26 @@ Example output (keywords_report_[date].json):
 ```
 
 The tool generates comprehensive keyword reports with search intent analysis and competition metrics. Reports are saved in the `data/exports` directory.
+
+### Running Without API Keys (Demo Mode)
+
+For testing without API keys, use the mock keyword demo script:
+
+```bash
+# With Poetry
+poetry run python tests/mock/simple_keyword_demo.py --seed "digital marketing" --industry "saas" --auto-csv
+
+# With Pipenv
+pipenv run mock
+
+# With Make
+make mock
+
+# Traditional
+python tests/mock/simple_keyword_demo.py --seed "digital marketing" --industry "saas" --auto-csv
+```
+
+This will generate mock keyword data and save it to both JSON and CSV formats in the `data/exports` directory.
 
 ### Content Optimization
 
@@ -134,20 +203,25 @@ This project uses the following tools to maintain code quality:
 - **Ruff**: Fast Python linter and formatter (replaces Black, isort, and Flake8)
 - **MyPy**: Static type checker
 - **pre-commit**: Git hooks for automated checks
+- **pytest**: Testing framework
+- **pytest-cov**: Test coverage reporting
+- **pytest-mock**: Mocking support for tests
 
 ### Setup Development Environment
 
-1. Run the setup script:
+1. Using Poetry (recommended):
    ```bash
-   ./setup_dev.sh
+   poetry install --with dev
+   poetry run pre-commit install
    ```
-   This will:
-   - Create a virtual environment
-   - Install dependencies
-   - Set up pre-commit hooks
-   - Create a template .env file
 
-   Alternatively, you can set up manually:
+2. Using Pipenv:
+   ```bash
+   pipenv install --dev
+   pipenv run pre-commit install
+   ```
+
+3. Traditional method:
    ```bash
    pip install -r requirements-dev.txt
    pre-commit install
@@ -155,34 +229,105 @@ This project uses the following tools to maintain code quality:
 
 ### Running Linting Tools
 
-You can use the provided Makefile to run various code quality checks:
-
+With Poetry:
 ```bash
 # Format code with Ruff
-make format
+poetry run ruff format seo_agent main.py
 
 # Run linting with Ruff
-make lint
+poetry run ruff check seo_agent main.py
 
 # Run type checking with MyPy
-make typecheck
-
-# Run all checks
-make all
+poetry run mypy seo_agent main.py
 ```
 
-Alternatively, you can run individual tools directly:
-
+With Pipenv:
 ```bash
-# Format code
-ruff format seo_agent main.py
-ruff check --fix seo_agent main.py
+pipenv run ruff format seo_agent main.py
+pipenv run ruff check seo_agent main.py
+pipenv run mypy seo_agent main.py
+```
 
-# Lint code
-ruff check seo_agent main.py
+Or use the provided Makefile:
+```bash
+make format
+make lint
+make typecheck
+make all  # Run all checks
+```
 
-# Type check
-mypy seo_agent main.py
+### Running Tests
+
+The project uses pytest for testing with a comprehensive test suite covering all core modules. The test suite includes unit tests for all functionality with proper mocking of external dependencies.
+
+#### Test Structure
+
+- **Unit Tests**: Tests for individual components in isolation
+- **Integration Tests**: Tests for component interactions
+- **Mock Tests**: Separate tests using mock data for development without API keys
+
+#### Test Command Reference
+
+With Poetry:
+```bash
+# Run all tests
+poetry run pytest
+
+# Run only unit tests
+poetry run pytest -m unit
+
+# Run only integration tests
+poetry run pytest -m integration
+
+# Run with coverage report
+poetry run pytest --cov=seo_agent
+
+# Run tests for a specific module
+poetry run pytest tests/core/test_keyword_engine.py
+
+# Run a specific test
+poetry run pytest tests/core/test_keyword_engine.py::TestKeywordEngine::test_init
+```
+
+With Pipenv:
+```bash
+# Run all tests
+pipenv run test
+
+# Run only unit tests
+pipenv run test-unit
+
+# Run only integration tests
+pipenv run test-integration
+
+# Run with coverage report
+pipenv run test-cov
+```
+
+Or use the provided Makefile:
+```bash
+make test
+make test-unit
+make test-integration
+make test-cov
+```
+
+#### Writing New Tests
+
+When adding new features, please include tests that verify the functionality. For examples of how to write tests, see the existing test files in the `tests/core/` directory.
+
+```python
+# Example of a simple test
+def test_my_feature(sample_config):
+    # Arrange
+    my_component = MyComponent(sample_config)
+
+    # Act
+    result = my_component.my_feature("test input")
+
+    # Assert
+    assert "expected output" in result
+    assert result["status"] == "success"
 ```
 
 ## Output
@@ -198,11 +343,20 @@ All reports and exports are saved to the `data/exports` directory by default. Th
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-Before submitting a PR, please make sure your code passes all quality checks:
+Before submitting a PR, please make sure your code passes all quality checks and tests:
 
 ```bash
+# Run all code quality checks and tests
 make all
+
+# Run specific checks
+make format  # Format code with Ruff
+make lint    # Check code style with Ruff
+make typecheck  # Check types with MyPy
+make test    # Run all tests
 ```
+
+The project uses GitHub Actions for CI/CD, which will automatically run all checks and tests on your PR. To ensure your PR is accepted smoothly, make sure all tests pass locally before submitting.
 
 ## License
 

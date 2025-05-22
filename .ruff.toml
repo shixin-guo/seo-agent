@@ -1,0 +1,7 @@
+[lint]
+# Completely exclude tests directory from all linting
+exclude = [
+    "tests/",
+    "tests/mock/",
+    "tests/core/",
+]

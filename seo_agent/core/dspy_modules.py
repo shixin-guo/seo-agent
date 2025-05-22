@@ -7,7 +7,7 @@ and site auditing.
 
 import json
 import os
-from typing import Any
+from typing import Any, Optional
 
 import dspy
 from dspy.clients.lm import LM
@@ -40,7 +40,7 @@ class KeywordGenerator(dspy.Module):
             dspy.settings.configure(lm=LM(model=self.model_name, api_key=api_key))
 
     def generate_keywords(
-        self, seed_keyword: str, industry: str | None = None
+        self, seed_keyword: str, industry: Optional[str] = None
     ) -> list[dict[str, Any]]:
         """Generate keyword ideas based on a seed keyword and optional industry context.
 
@@ -171,7 +171,7 @@ class BacklinkAnalyzer(dspy.Module):
             )
 
     def analyze_backlinks(
-        self, domain: str, competitors: list[str] | None = None
+        self, domain: str, competitors: Optional[list[str]] = None
     ) -> dict[str, Any]:
         """Analyze backlink opportunities based on domain and competitors.
 
