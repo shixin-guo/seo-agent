@@ -26,5 +26,8 @@ if [ ! -f .env ]; then
     echo "Please edit .env file with your API keys"
 fi
 
+echo "Linting setup complete with Ruff!"
+echo "Run 'make format' to format your code or 'make lint' to check it."
+echo ""
 echo "Setup complete! Activate the virtual environment with:"
 echo "source venv/bin/activate"

@@ -5,11 +5,11 @@ init:
 	pre-commit install
 
 lint:
-	flake8 seo_agent main.py
+	ruff check seo_agent main.py
 
 format:
-	black seo_agent main.py
-	isort seo_agent main.py
+	ruff format seo_agent main.py
+	ruff check --fix seo_agent main.py
 
 typecheck:
 	mypy seo_agent main.py
@@ -25,6 +25,7 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf .mypy_cache
 	rm -rf .coverage
+	rm -rf .ruff_cache
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
 	find . -type d -name "*.egg" -exec rm -rf {} +

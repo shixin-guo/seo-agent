@@ -93,11 +93,9 @@ defaults:
 
 ### Code Quality Tools
 
-This project uses several tools to maintain code quality:
+This project uses the following tools to maintain code quality:
 
-- **Black**: Code formatter
-- **isort**: Import statement organizer
-- **Flake8**: Linter
+- **Ruff**: Fast Python linter and formatter (replaces Black, isort, and Flake8)
 - **MyPy**: Static type checker
 - **pre-commit**: Git hooks for automated checks
 
@@ -124,10 +122,10 @@ This project uses several tools to maintain code quality:
 You can use the provided Makefile to run various code quality checks:
 
 ```bash
-# Format code with Black and isort
+# Format code with Ruff
 make format
 
-# Run linting with Flake8
+# Run linting with Ruff
 make lint
 
 # Run type checking with MyPy
@@ -141,11 +139,11 @@ Alternatively, you can run individual tools directly:
 
 ```bash
 # Format code
-black seo_agent main.py
-isort seo_agent main.py
+ruff format seo_agent main.py
+ruff check --fix seo_agent main.py
 
 # Lint code
-flake8 seo_agent main.py
+ruff check seo_agent main.py
 
 # Type check
 mypy seo_agent main.py

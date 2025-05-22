@@ -8,9 +8,7 @@ dependencies, and entry points.
 
 from setuptools import find_packages, setup
 
-"""Configuration module for the seo-agent package setup."""
-
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
@@ -42,13 +40,9 @@ setup(
     ],
     extras_require={
         "dev": [
-            "black>=23.3.0",
-            "isort>=5.12.0",
-            "flake8>=6.0.0",
-            "flake8-docstrings>=1.7.0",
+            "ruff>=0.1.6",
             "mypy>=1.3.0",
             "pre-commit>=3.3.2",
-            "pylint>=2.17.4",
             "types-requests>=2.31.0",
             "types-PyYAML>=6.0.12",
         ],
