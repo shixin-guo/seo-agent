@@ -1,0 +1,22 @@
+## Backlink Outreach Email
+
+Subject: Partnership Opportunity - {{domain}}
+
+Hello {{site_owner}},
+
+I recently came across your article about {{topic}} on {{their_site}} and found it incredibly helpful.
+
+I noticed you mentioned {{competitor}} in your article. I wanted to reach out because we've recently published a comprehensive guide on {{topic}} that might be valuable to your audience as well.
+
+You can find it here: {{our_url}}
+
+It covers additional aspects like {{unique_points}} that your readers might find useful.
+
+Would you consider checking it out and possibly including it as a resource in your article?
+
+Either way, I enjoyed your content and will be sharing it with our audience.
+
+Best regards,
+{{name}}
+{{position}}
+{{website}}

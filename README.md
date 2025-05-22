@@ -1,0 +1,88 @@
+# SEO AI Agent
+
+A command-line/API-first SEO automation tool that focuses on core AI-powered SEO tasks with minimal infrastructure dependencies.
+
+## Overview
+
+SEO AI Agent is a simplified SEO automation tool designed for technical users who need effective SEO assistance without complex UIs or infrastructure. It uses AI to automate common SEO tasks like keyword research, content optimization, site auditing, and backlink analysis.
+
+## Features
+
+- 🔍 **Keyword Research Engine**: Expand seed keywords using DSPy AI, analyze competition via free APIs, and export to CSV/JSON.
+- ✍️ **Content Optimizer**: Analyze and score content, get AI-powered optimization suggestions, and generate meta tags.
+- 🔗 **Backlink Analyzer**: Analyze backlink profiles, identify opportunities, and generate outreach templates.
+- 🔧 **Site Auditor**: Perform technical SEO crawling, detect common issues, and get prioritized recommendations.
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/seo-agent.git
+cd seo-agent
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up your API keys in config.yaml
+```
+
+## Usage
+
+### Keyword Research
+
+```bash
+python main.py keyword-research --seed "digital marketing" --industry "saas"
+```
+
+### Content Optimization
+
+```bash
+python main.py optimize-content --file "blog_post.txt" --keywords "keywords.json"
+```
+
+### Site Audit
+
+```bash
+python main.py audit-site --domain "example.com" --depth 50
+```
+
+### Backlink Research
+
+```bash
+python main.py backlink-research --domain "example.com" --competitors "comp1.com,comp2.com"
+```
+
+## Configuration
+
+Edit the `config.yaml` file to customize your settings:
+
+```yaml
+# API Keys (optional)
+apis:
+  openai_key: "your-key-here"
+  serpapi_key: "optional-for-better-data"
+  
+# Default Settings
+defaults:
+  max_keywords: 100
+  crawl_depth: 50
+  approval_required: true
+  export_format: "json"
+```
+
+## Output
+
+All reports and exports are saved to the `data/exports` directory by default. The tool generates various output formats:
+
+- JSON for programmatic use
+- CSV for spreadsheet analysis
+- HTML for readable reports
+- Markdown for documentation
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
