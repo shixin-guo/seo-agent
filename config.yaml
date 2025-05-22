@@ -1,21 +1,16 @@
-# API Keys (optional)
-apis:
-  openai_key: "your-key-here"
-  serpapi_key: "optional-for-better-data"
-  
 # Default Settings
 defaults:
   max_keywords: 100
   crawl_depth: 50
   approval_required: true
   export_format: "json"
-  
-# Output Preferences  
+
+# Output Preferences
 output:
   reports_folder: "./data/exports"
   auto_timestamp: true
   email_reports: false
-  
+
 # AI Settings
 ai:
   model: "gpt-4-turbo-preview"

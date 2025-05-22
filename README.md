@@ -81,11 +81,6 @@ Required API keys depend on the features you use:
 Edit the `config.yaml` file to customize your settings:
 
 ```yaml
-# API Keys (optional)
-apis:
-  openai_key: "your-key-here"
-  serpapi_key: "optional-for-better-data"
-
 # Default Settings
 defaults:
   max_keywords: 100
