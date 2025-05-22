@@ -30,7 +30,7 @@ poetry install
 poetry install --with dev
 
 # Run the application
-poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
+poetry run python main.py keyword-research --seed "digital marketing" --industry "saas"
 ```
 
 ## Usage
@@ -38,7 +38,7 @@ poetry run python -m seo_agent.main keyword-research --seed "digital marketing" 
 ### Keyword Research
 
 ```bash
-poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
+poetry run python main.py keyword-research --seed "digital marketing" --industry "saas"
 ```
 
 Example output (keywords_report_[date].json):
@@ -94,19 +94,19 @@ This will generate mock keyword data and save it to both JSON and CSV formats in
 ### Content Optimization
 
 ```bash
-poetry run python -m seo_agent.main optimize-content --file "blog_post.txt" --keywords "keywords.json"
+poetry run python main.py optimize-content --file "blog_post.txt" --keywords "keywords.json"
 ```
 
 ### Site Audit
 
 ```bash
-poetry run python -m seo_agent.main audit-site --domain "example.com" --depth 50
+poetry run python main.py audit-site --domain "example.com" --depth 50
 ```
 
 ### Backlink Research
 
 ```bash
-poetry run python -m seo_agent.main backlink-research --domain "example.com" --competitors "comp1.com,comp2.com"
+poetry run python main.py backlink-research --domain "example.com" --competitors "comp1.com,comp2.com"
 ```
 
 ## Configuration
