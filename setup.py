@@ -1,4 +1,14 @@
-from setuptools import setup, find_packages
+"""Setup configuration for the seo-agent package.
+
+This module contains the package configuration
+and dependencies for the seo-agent project,
+an AI-powered SEO automation tool. It uses setuptools to manage package installation,
+dependencies, and entry points.
+"""
+
+from setuptools import find_packages, setup
+
+"""Configuration module for the seo-agent package setup."""
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -30,6 +40,19 @@ setup(
         "beautifulsoup4>=4.12.0",
         "pandas>=2.0.0",
     ],
+    extras_require={
+        "dev": [
+            "black>=23.3.0",
+            "isort>=5.12.0",
+            "flake8>=6.0.0",
+            "flake8-docstrings>=1.7.0",
+            "mypy>=1.3.0",
+            "pre-commit>=3.3.2",
+            "pylint>=2.17.4",
+            "types-requests>=2.31.0",
+            "types-PyYAML>=6.0.12",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "seo-agent=main:cli",

@@ -23,7 +23,8 @@ cd seo-agent
 # Install dependencies
 pip install -r requirements.txt
 
-# Set up your API keys in config.yaml
+# For development, install dev dependencies
+pip install -r requirements-dev.txt
 ```
 
 ## Usage
@@ -84,13 +85,75 @@ Edit the `config.yaml` file to customize your settings:
 apis:
   openai_key: "your-key-here"
   serpapi_key: "optional-for-better-data"
-  
+
 # Default Settings
 defaults:
   max_keywords: 100
   crawl_depth: 50
   approval_required: true
   export_format: "json"
+```
+
+## Development
+
+### Code Quality Tools
+
+This project uses several tools to maintain code quality:
+
+- **Black**: Code formatter
+- **isort**: Import statement organizer
+- **Flake8**: Linter
+- **MyPy**: Static type checker
+- **pre-commit**: Git hooks for automated checks
+
+### Setup Development Environment
+
+1. Run the setup script:
+   ```bash
+   ./setup_dev.sh
+   ```
+   This will:
+   - Create a virtual environment
+   - Install dependencies
+   - Set up pre-commit hooks
+   - Create a template .env file
+
+   Alternatively, you can set up manually:
+   ```bash
+   pip install -r requirements-dev.txt
+   pre-commit install
+   ```
+
+### Running Linting Tools
+
+You can use the provided Makefile to run various code quality checks:
+
+```bash
+# Format code with Black and isort
+make format
+
+# Run linting with Flake8
+make lint
+
+# Run type checking with MyPy
+make typecheck
+
+# Run all checks
+make all
+```
+
+Alternatively, you can run individual tools directly:
+
+```bash
+# Format code
+black seo_agent main.py
+isort seo_agent main.py
+
+# Lint code
+flake8 seo_agent main.py
+
+# Type check
+mypy seo_agent main.py
 ```
 
 ## Output
@@ -105,6 +168,12 @@ All reports and exports are saved to the `data/exports` directory by default. Th
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+Before submitting a PR, please make sure your code passes all quality checks:
+
+```bash
+make all
+```
 
 ## License
 
