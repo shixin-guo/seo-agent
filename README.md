@@ -15,8 +15,6 @@ SEO AI Agent is a simplified SEO automation tool designed for technical users wh
 
 ## Installation
 
-### Using Poetry (Recommended)
-
 ```bash
 # Install Poetry if you don't have it
 curl -sSL https://install.python-poetry.org | python3 -
@@ -28,60 +26,19 @@ cd seo-agent
 # Install dependencies
 poetry install
 
+# For development, install dev dependencies
+poetry install --with dev
+
 # Run the application
 poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
 ```
-
-### Using Pipenv
-
-```bash
-# Install Pipenv if you don't have it
-pip install --user pipenv
-
-# Clone the repository
-git clone https://github.com/yourusername/seo-agent.git
-cd seo-agent
-
-# Install dependencies
-pipenv install
-
-# Run the application
-pipenv run python main.py keyword-research --seed "digital marketing" --industry "saas"
-```
-
-### Using pip (Traditional)
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/seo-agent.git
-cd seo-agent
-
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# For development, install dev dependencies
-pip install -r requirements-dev.txt
-```
-
-For more dependency management options, see [dependency_management.md](dependency_management.md).
 
 ## Usage
 
 ### Keyword Research
 
 ```bash
-# With Poetry
 poetry run python -m seo_agent.main keyword-research --seed "digital marketing" --industry "saas"
-
-# With Pipenv
-pipenv run python main.py keyword-research --seed "digital marketing" --industry "saas"
-
-# Traditional
-python main.py keyword-research --seed "digital marketing" --industry "saas"
 ```
 
 Example output (keywords_report_[date].json):
@@ -125,17 +82,11 @@ The tool generates comprehensive keyword reports with search intent analysis and
 For testing without API keys, use the mock keyword demo script:
 
 ```bash
-# With Poetry
+# Run directly with Poetry
 poetry run python tests/mock/simple_keyword_demo.py --seed "digital marketing" --industry "saas" --auto-csv
 
-# With Pipenv
-pipenv run mock
-
-# With Make
+# Or use the Makefile
 make mock
-
-# Traditional
-python tests/mock/simple_keyword_demo.py --seed "digital marketing" --industry "saas" --auto-csv
 ```
 
 This will generate mock keyword data and save it to both JSON and CSV formats in the `data/exports` directory.
@@ -143,19 +94,19 @@ This will generate mock keyword data and save it to both JSON and CSV formats in
 ### Content Optimization
 
 ```bash
-python main.py optimize-content --file "blog_post.txt" --keywords "keywords.json"
+poetry run python -m seo_agent.main optimize-content --file "blog_post.txt" --keywords "keywords.json"
 ```
 
 ### Site Audit
 
 ```bash
-python main.py audit-site --domain "example.com" --depth 50
+poetry run python -m seo_agent.main audit-site --domain "example.com" --depth 50
 ```
 
 ### Backlink Research
 
 ```bash
-python main.py backlink-research --domain "example.com" --competitors "comp1.com,comp2.com"
+poetry run python -m seo_agent.main backlink-research --domain "example.com" --competitors "comp1.com,comp2.com"
 ```
 
 ## Configuration
@@ -209,43 +160,25 @@ This project uses the following tools to maintain code quality:
 
 ### Setup Development Environment
 
-1. Using Poetry (recommended):
-   ```bash
-   poetry install --with dev
-   poetry run pre-commit install
-   ```
+```bash
+# Install development dependencies
+poetry install --with dev
 
-2. Using Pipenv:
-   ```bash
-   pipenv install --dev
-   pipenv run pre-commit install
-   ```
-
-3. Traditional method:
-   ```bash
-   pip install -r requirements-dev.txt
-   pre-commit install
-   ```
+# Set up pre-commit hooks
+poetry run pre-commit install
+```
 
 ### Running Linting Tools
 
-With Poetry:
 ```bash
 # Format code with Ruff
-poetry run ruff format seo_agent main.py
+poetry run ruff format seo_agent
 
 # Run linting with Ruff
-poetry run ruff check seo_agent main.py
+poetry run ruff check seo_agent
 
 # Run type checking with MyPy
-poetry run mypy seo_agent main.py
-```
-
-With Pipenv:
-```bash
-pipenv run ruff format seo_agent main.py
-pipenv run ruff check seo_agent main.py
-pipenv run mypy seo_agent main.py
+poetry run mypy seo_agent
 ```
 
 Or use the provided Makefile:
@@ -268,7 +201,6 @@ The project uses pytest for testing with a comprehensive test suite covering all
 
 #### Test Command Reference
 
-With Poetry:
 ```bash
 # Run all tests
 poetry run pytest
@@ -287,21 +219,6 @@ poetry run pytest tests/core/test_keyword_engine.py
 
 # Run a specific test
 poetry run pytest tests/core/test_keyword_engine.py::TestKeywordEngine::test_init
-```
-
-With Pipenv:
-```bash
-# Run all tests
-pipenv run test
-
-# Run only unit tests
-pipenv run test-unit
-
-# Run only integration tests
-pipenv run test-integration
-
-# Run with coverage report
-pipenv run test-cov
 ```
 
 Or use the provided Makefile:

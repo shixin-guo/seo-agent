@@ -1,9 +1,29 @@
+# Environment variables
 .env
-seo_agent/core/__pycache__/__init__.cpython-313.pyc
-seo_agent/core/__pycache__/backlink_analyzer.cpython-313.pyc
-seo_agent/core/__pycache__/content_optimizer.cpython-313.pyc
-seo_agent/core/__pycache__/dspy_modules.cpython-313.pyc
-seo_agent/core/__pycache__/keyword_engine.cpython-313.pyc
-seo_agent/core/__pycache__/site_auditor.cpython-313.pyc
-seo_agent/__pycache__/__init__.cpython-313.pyc
-data/exports/keywords_report_2025_05_21.json
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Poetry
+.venv/
+# poetry.lock  # Uncomment to ignore poetry.lock file
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# Linting and type checking
+.mypy_cache/
+.ruff_cache/
+
+# Application data
+data/exports/
