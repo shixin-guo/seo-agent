@@ -35,6 +35,42 @@ pip install -r requirements-dev.txt
 python main.py keyword-research --seed "digital marketing" --industry "saas"
 ```
 
+Example output (keywords_report_[date].json):
+```json
+{
+  "seed_keyword": "digital marketing",
+  "industry": "saas",
+  "total_keywords": 15,
+  "keywords": [
+    {
+      "keyword": "Digital marketing strategies for SaaS",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "SaaS digital marketing agency",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "Best digital marketing tools for SaaS",
+      "intent": "informational",
+      "competition": "medium"
+    }
+  ],
+  "intent_groups": {
+    "informational": [
+      "Digital marketing strategies for SaaS",
+      "SaaS digital marketing agency",
+      "Best digital marketing tools for SaaS"
+      // ... more keywords
+    ]
+  }
+}
+```
+
+The tool generates comprehensive keyword reports with search intent analysis and competition metrics. Reports are saved in the `data/exports` directory.
+
 ### Content Optimization
 
 ```bash
