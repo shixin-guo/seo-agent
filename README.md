@@ -54,6 +54,29 @@ python main.py backlink-research --domain "example.com" --competitors "comp1.com
 
 ## Configuration
 
+### API Keys Setup
+
+1. Copy the template environment file:
+   ```bash
+   cp .env.template .env
+   ```
+
+2. Edit `.env` and add your API keys:
+   ```
+   OPENAI_API_KEY=your_openai_api_key_here
+   SERPAPI_KEY=your_serpapi_key_here
+   AHREFS_API_KEY=your_ahrefs_api_key_here  # Optional
+   SEMRUSH_API_KEY=your_semrush_api_key_here  # Optional
+   ```
+
+Required API keys depend on the features you use:
+- Keyword Research: OpenAI API key, SerpAPI key
+- Content Optimization: OpenAI API key
+- Backlink Analysis: OpenAI API key, Ahrefs API key
+- Site Auditing: OpenAI API key
+
+### Configuration File
+
 Edit the `config.yaml` file to customize your settings:
 
 ```yaml

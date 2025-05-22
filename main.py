@@ -6,6 +6,10 @@ import json
 import yaml
 import click
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Import core modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -16,9 +20,40 @@ from seo_agent.core.site_auditor import SiteAuditor
 
 # Load configuration
 def load_config():
+    # Load config from YAML
     config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.yaml')
     with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
+        config = yaml.safe_load(f)
+    
+    # Add API keys from environment variables
+    api_keys = {
+        'openai_key': os.getenv('OPENAI_API_KEY'),
+        'serpapi_key': os.getenv('SERPAPI_KEY'),
+        'ahrefs_key': os.getenv('AHREFS_API_KEY'),
+        'semrush_key': os.getenv('SEMRUSH_API_KEY')
+    }
+    
+    # Remove None values
+    api_keys = {k: v for k, v in api_keys.items() if v is not None}
+    
+    # Merge with config
+    if 'apis' not in config:
+        config['apis'] = {}
+    config['apis'].update(api_keys)
+    
+    return config
+
+def validate_api_keys(config, required_apis):
+    """Validate that required API keys are present"""
+    missing_keys = []
+    for api in required_apis:
+        if not config.get('apis', {}).get(api):
+            missing_keys.append(api)
+    
+    if missing_keys:
+        click.echo(f"❌ Missing required API keys: {', '.join(missing_keys)}")
+        click.echo("Please add them to your .env file")
+        sys.exit(1)
 
 # Approval system
 def require_approval(operation, details, config):
@@ -47,6 +82,9 @@ def cli():
 def keyword_research(seed, industry, output):
     """Generate keyword research based on seed keywords"""
     config = load_config()
+    
+    # Validate required API keys
+    validate_api_keys(config, ['openai_key', 'serpapi_key'])
     
     click.echo(f"🔍 Performing keyword research for: {seed}")
     
@@ -86,6 +124,9 @@ def optimize_content(file, keywords):
     """Optimize content for SEO"""
     config = load_config()
     
+    # Validate required API keys
+    validate_api_keys(config, ['openai_key'])
+    
     click.echo(f"✍️ Optimizing content: {file}")
     click.echo("Not implemented yet. Coming soon!")
 
@@ -96,6 +137,9 @@ def audit_site(domain, depth):
     """Perform a technical SEO audit on a website"""
     config = load_config()
     
+    # Validate required API keys
+    validate_api_keys(config, ['openai_key'])
+    
     click.echo(f"🔧 Auditing site: {domain} (max {depth} pages)")
     click.echo("Not implemented yet. Coming soon!")
 
@@ -105,6 +149,9 @@ def audit_site(domain, depth):
 def backlink_research(domain, competitors):
     """Research backlink opportunities"""
     config = load_config()
+    
+    # Validate required API keys
+    validate_api_keys(config, ['openai_key', 'ahrefs_key'])
     
     comp_list = competitors.split(',') if competitors else []
     click.echo(f"🔗 Researching backlink opportunities for: {domain}")
