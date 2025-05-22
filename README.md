@@ -31,6 +31,9 @@ poetry install --with dev
 
 # Run the application
 poetry run python main.py keyword-research --seed "digital marketing" --industry "saas"
+
+# Or using the installed script (after poetry install)
+poetry run seo-agent keyword-research --seed "digital marketing" --industry "saas"
 ```
 
 ## Usage
