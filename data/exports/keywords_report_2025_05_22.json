@@ -1,75 +1,75 @@
 {
-  "seed_keyword": "ai conversation for sales",
+  "seed_keyword": "digital marketing",
   "industry": "saas",
   "total_keywords": 10,
   "keywords": [
     {
-      "keyword": "AI chatbot for sales",
+      "keyword": "digital marketing strategies for SaaS",
       "intent": "informational",
       "competition": "medium"
     },
     {
-      "keyword": "Best AI conversation tools for sales",
+      "keyword": "best SaaS digital marketing tools",
       "intent": "commercial",
       "competition": "medium"
     },
     {
-      "keyword": "AI conversation platform pricing",
+      "keyword": "SaaS digital marketing agency",
       "intent": "transactional",
       "competition": "high"
     },
     {
-      "keyword": "How to use AI for sales",
+      "keyword": "how to improve SaaS sales with digital marketing",
       "intent": "informational",
       "competition": "medium"
     },
     {
-      "keyword": "AI sales assistant software",
-      "intent": "commercial",
-      "competition": "medium"
-    },
-    {
-      "keyword": "AI for sales lead generation",
+      "keyword": "digital marketing trends in SaaS",
       "intent": "informational",
       "competition": "medium"
     },
     {
-      "keyword": "AI conversation tool features for SaaS",
+      "keyword": "SaaS digital marketing case studies",
       "intent": "informational",
-      "competition": "medium"
+      "competition": "low"
     },
     {
-      "keyword": "Implementing AI in sales strategy",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "AI for improving sales conversions",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "Compare AI sales tools",
+      "keyword": "digital marketing software for SaaS companies",
       "intent": "commercial",
       "competition": "high"
+    },
+    {
+      "keyword": "SaaS SEO strategies",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "SaaS PPC advertising tips",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "SaaS digital marketing courses",
+      "intent": "transactional",
+      "competition": "medium"
     }
   ],
   "intent_groups": {
     "informational": [
-      "AI chatbot for sales",
-      "How to use AI for sales",
-      "AI for sales lead generation",
-      "AI conversation tool features for SaaS",
-      "Implementing AI in sales strategy",
-      "AI for improving sales conversions"
+      "digital marketing strategies for SaaS",
+      "how to improve SaaS sales with digital marketing",
+      "digital marketing trends in SaaS",
+      "SaaS digital marketing case studies",
+      "SaaS SEO strategies",
+      "SaaS PPC advertising tips"
     ],
     "commercial": [
-      "Best AI conversation tools for sales",
-      "AI sales assistant software",
-      "Compare AI sales tools"
+      "best SaaS digital marketing tools",
+      "digital marketing software for SaaS companies"
     ],
     "transactional": [
-      "AI conversation platform pricing"
+      "SaaS digital marketing agency",
+      "SaaS digital marketing courses"
     ]
   }
 }
