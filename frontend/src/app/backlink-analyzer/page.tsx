@@ -1,88 +1,109 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { MainNav } from "@/components/nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Link2, ExternalLink, Download, BarChart, Trophy, Mail, TrendingUp, Network } from "lucide-react"
+import { useState } from "react";
+import { MainNav } from "@/components/nav";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Link2,
+  ExternalLink,
+  Download,
+  BarChart,
+  Trophy,
+  Mail,
+  TrendingUp,
+  Network,
+} from "lucide-react";
 
 interface BacklinkSummary {
-  total_backlinks: number
-  unique_domains: number
-  dofollow_count: number
-  nofollow_count: number
+  total_backlinks: number;
+  unique_domains: number;
+  dofollow_count: number;
+  nofollow_count: number;
 }
 
 interface BacklinkOpportunity {
-  source_domain: string
-  source_url: string
-  domain_authority: string | number
-  link_type: string
-  competitor: string
-  opportunity_score: number
+  source_domain: string;
+  source_url: string;
+  domain_authority: string | number;
+  link_type: string;
+  competitor: string;
+  opportunity_score: number;
 }
 
 interface CompetitorData {
   [key: string]: {
-    backlinks?: any[]
-    domain_authority?: number
-  }
+    backlinks?: any[];
+    domain_authority?: number;
+  };
 }
 
 interface BacklinkAnalysisResult {
-  domain: string
-  summary: BacklinkSummary
-  opportunities: BacklinkOpportunity[]
-  competitors: CompetitorData
-  templates?: Record<string, string>
+  domain: string;
+  summary: BacklinkSummary;
+  opportunities: BacklinkOpportunity[];
+  competitors: CompetitorData;
+  templates?: Record<string, string>;
 }
 
 export default function BacklinkAnalyzer() {
-  const [domain, setDomain] = useState("")
-  const [competitors, setCompetitors] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [results, setResults] = useState<BacklinkAnalysisResult | null>(null)
-  const [activeTab, setActiveTab] = useState("input")
-  const [generateTemplates, setGenerateTemplates] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  const [domain, setDomain] = useState("");
+  const [competitors, setCompetitors] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<BacklinkAnalysisResult | null>(null);
+  const [activeTab, setActiveTab] = useState("input");
+  const [generateTemplates, setGenerateTemplates] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!domain) return
+    e.preventDefault();
+    if (!domain) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // In a real implementation, this would call the actual API
       // For now, simulating the response
       setTimeout(() => {
-        const competitorsList = competitors.split(",").map(c => c.trim()).filter(Boolean)
+        const competitorsList = competitors
+          .split(",")
+          .map((c) => c.trim())
+          .filter(Boolean);
 
-        const mockCompetitorData: CompetitorData = {}
-        competitorsList.forEach(comp => {
+        const mockCompetitorData: CompetitorData = {};
+        competitorsList.forEach((comp) => {
           mockCompetitorData[comp] = {
             domain_authority: Math.floor(Math.random() * 50) + 30,
-            backlinks: Array(Math.floor(Math.random() * 50) + 10).fill(null)
-          }
-        })
+            backlinks: Array(Math.floor(Math.random() * 50) + 10).fill(null),
+          };
+        });
 
-        const mockOpportunities: BacklinkOpportunity[] = Array(15).fill(null).map((_, i) => ({
-          source_domain: `example${i}.com`,
-          source_url: `https://example${i}.com/blog/post${i}`,
-          domain_authority: Math.floor(Math.random() * 50) + 30,
-          link_type: ["dofollow", "nofollow"][i % 2],
-          competitor: competitorsList[i % competitorsList.length] || "N/A",
-          opportunity_score: Math.floor(Math.random() * 100)
-        }))
+        const mockOpportunities: BacklinkOpportunity[] = Array(15)
+          .fill(null)
+          .map((_, i) => ({
+            source_domain: `example${i}.com`,
+            source_url: `https://example${i}.com/blog/post${i}`,
+            domain_authority: Math.floor(Math.random() * 50) + 30,
+            link_type: ["dofollow", "nofollow"][i % 2],
+            competitor: competitorsList[i % competitorsList.length] || "N/A",
+            opportunity_score: Math.floor(Math.random() * 100),
+          }));
 
         // Sort by opportunity score (highest first)
-        mockOpportunities.sort((a, b) => b.opportunity_score - a.opportunity_score)
+        mockOpportunities.sort((a, b) => b.opportunity_score - a.opportunity_score);
 
         const mockTemplates: Record<string, string> = {
-          "resource_mention": `Subject: Your [Topic] Guide on ${domain}
+          resource_mention: `Subject: Your [Topic] Guide on ${domain}
 
 Hello [Name],
 
@@ -95,7 +116,7 @@ Would you consider adding a link to our guide? I'd be happy to share it on our s
 Best regards,
 [Your Name]
 ${domain}`,
-          "broken_link": `Subject: Broken Link on Your Website
+          broken_link: `Subject: Broken Link on Your Website
 
 Hello [Name],
 
@@ -110,7 +131,7 @@ Let me know if you'd like to use our resource!
 Best regards,
 [Your Name]
 ${domain}`,
-          "guest_post": `Subject: Guest Post Opportunity
+          guest_post: `Subject: Guest Post Opportunity
 
 Hello [Name],
 
@@ -124,8 +145,8 @@ Would you be interested in this contribution?
 
 Best regards,
 [Your Name]
-${domain}`
-        }
+${domain}`,
+        };
 
         const mockResult: BacklinkAnalysisResult = {
           domain,
@@ -133,17 +154,17 @@ ${domain}`
             total_backlinks: 187,
             unique_domains: 42,
             dofollow_count: 124,
-            nofollow_count: 63
+            nofollow_count: 63,
           },
           opportunities: mockOpportunities,
           competitors: mockCompetitorData,
-          templates: generateTemplates ? mockTemplates : undefined
-        }
+          templates: generateTemplates ? mockTemplates : undefined,
+        };
 
-        setResults(mockResult)
-        setIsLoading(false)
-        setActiveTab("results")
-      }, 2000)
+        setResults(mockResult);
+        setIsLoading(false);
+        setActiveTab("results");
+      }, 2000);
 
       // Actual API call would look like this:
       // const competitorsList = competitors.split(",").map(c => c.trim()).filter(Boolean)
@@ -161,43 +182,47 @@ ${domain}`
       // const data = await response.json()
       // setResults(data)
     } catch (error) {
-      console.error('Error analyzing backlinks:', error)
+      console.error("Error analyzing backlinks:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleExport = (format: 'csv' | 'json') => {
-    if (!results) return
+  const handleExport = (format: "csv" | "json") => {
+    if (!results) return;
 
-    let content: string
-    let filename: string
+    let content: string;
+    let filename: string;
 
-    if (format === 'csv') {
+    if (format === "csv") {
       // Create CSV content
-      const header = 'source_domain,source_url,domain_authority,link_type,competitor,opportunity_score\n'
-      const rows = results.opportunities.map(opp =>
-        `${opp.source_domain},${opp.source_url},${opp.domain_authority},${opp.link_type},${opp.competitor},${opp.opportunity_score}`
-      ).join('\n')
-      content = header + rows
-      filename = `backlink_opportunities_${results.domain.replace(/\./g, '_')}.csv`
+      const header =
+        "source_domain,source_url,domain_authority,link_type,competitor,opportunity_score\n";
+      const rows = results.opportunities
+        .map(
+          (opp) =>
+            `${opp.source_domain},${opp.source_url},${opp.domain_authority},${opp.link_type},${opp.competitor},${opp.opportunity_score}`,
+        )
+        .join("\n");
+      content = header + rows;
+      filename = `backlink_opportunities_${results.domain.replace(/\./g, "_")}.csv`;
     } else {
       // Create JSON content
-      content = JSON.stringify(results, null, 2)
-      filename = `backlink_analysis_${results.domain.replace(/\./g, '_')}.json`
+      content = JSON.stringify(results, null, 2);
+      filename = `backlink_analysis_${results.domain.replace(/\./g, "_")}.json`;
     }
 
     // Create download link
-    const blob = new Blob([content], { type: format === 'csv' ? 'text/csv' : 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([content], { type: format === "csv" ? "text/csv" : "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -209,7 +234,9 @@ ${domain}`
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList>
               <TabsTrigger value="input">Input</TabsTrigger>
-              <TabsTrigger value="results" disabled={!results}>Results</TabsTrigger>
+              <TabsTrigger value="results" disabled={!results}>
+                Results
+              </TabsTrigger>
               {results?.templates && Object.keys(results.templates).length > 0 && (
                 <TabsTrigger value="templates">Outreach Templates</TabsTrigger>
               )}
@@ -274,16 +301,28 @@ ${domain}`
                   </form>
                 </CardContent>
                 <CardFooter>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!domain || isLoading}
-                    className="w-full"
-                  >
+                  <Button onClick={handleSubmit} disabled={!domain || isLoading} className="w-full">
                     {isLoading ? (
                       <span className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Analyzing...
                       </span>
@@ -311,11 +350,11 @@ ${domain}`
                           </CardDescription>
                         </div>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" onClick={() => handleExport('csv')}>
+                          <Button variant="outline" size="sm" onClick={() => handleExport("csv")}>
                             <Download className="mr-2 h-4 w-4" />
                             CSV
                           </Button>
-                          <Button variant="outline" size="sm" onClick={() => handleExport('json')}>
+                          <Button variant="outline" size="sm" onClick={() => handleExport("json")}>
                             <Download className="mr-2 h-4 w-4" />
                             JSON
                           </Button>
@@ -325,13 +364,17 @@ ${domain}`
                     <CardContent>
                       <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                         <div className="flex flex-col items-center space-y-2">
-                          <div className="text-4xl font-bold">{results.summary.total_backlinks}</div>
+                          <div className="text-4xl font-bold">
+                            {results.summary.total_backlinks}
+                          </div>
                           <div className="text-sm font-medium text-center">Total Backlinks</div>
                         </div>
 
                         <div className="flex flex-col items-center space-y-2">
                           <div className="text-4xl font-bold">{results.summary.unique_domains}</div>
-                          <div className="text-sm font-medium text-center">Unique Referring Domains</div>
+                          <div className="text-sm font-medium text-center">
+                            Unique Referring Domains
+                          </div>
                         </div>
 
                         <div className="flex flex-col items-center space-y-2">
@@ -366,12 +409,14 @@ ${domain}`
                               <div className="font-medium">{results.domain}</div>
                               <div>{results.summary.total_backlinks}</div>
                             </div>
-                            {Object.entries(results.competitors).map(([competitor, data], index) => (
-                              <div key={index} className="grid grid-cols-2 p-3">
-                                <div>{competitor}</div>
-                                <div>{data.backlinks?.length || 0}</div>
-                              </div>
-                            ))}
+                            {Object.entries(results.competitors).map(
+                              ([competitor, data], index) => (
+                                <div key={index} className="grid grid-cols-2 p-3">
+                                  <div>{competitor}</div>
+                                  <div>{data.backlinks?.length || 0}</div>
+                                </div>
+                              ),
+                            )}
                           </div>
                         </div>
                       </CardContent>
@@ -401,28 +446,39 @@ ${domain}`
                                 <div className="font-medium">{opp.source_domain}</div>
                                 <div className="text-xs text-muted-foreground flex items-center mt-1">
                                   <ExternalLink className="h-3 w-3 mr-1" />
-                                  <a href={opp.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline truncate">{opp.source_url}</a>
+                                  <a
+                                    href={opp.source_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:underline truncate"
+                                  >
+                                    {opp.source_url}
+                                  </a>
                                 </div>
                               </div>
                               <div>{opp.domain_authority}</div>
                               <div>
-                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                                  opp.link_type === 'dofollow'
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
+                                    opp.link_type === "dofollow"
+                                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                      : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                                  }`}
+                                >
                                   {opp.link_type}
                                 </span>
                               </div>
                               <div className="truncate">{opp.competitor}</div>
                               <div>
-                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                                  opp.opportunity_score >= 70
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                    : opp.opportunity_score >= 40
-                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
+                                    opp.opportunity_score >= 70
+                                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                      : opp.opportunity_score >= 40
+                                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                  }`}
+                                >
                                   {opp.opportunity_score}
                                 </span>
                               </div>
@@ -442,9 +498,7 @@ ${domain}`
                   <Card className="lg:col-span-1">
                     <CardHeader>
                       <CardTitle>Template Types</CardTitle>
-                      <CardDescription>
-                        Select a template type to view
-                      </CardDescription>
+                      <CardDescription>Select a template type to view</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2">
@@ -462,7 +516,7 @@ ${domain}`
                             ) : (
                               <Mail className="mr-2 h-4 w-4" />
                             )}
-                            {templateType.replace(/_/g, ' ')}
+                            {templateType.replace(/_/g, " ")}
                           </Button>
                         ))}
                       </div>
@@ -473,13 +527,13 @@ ${domain}`
                     <CardHeader>
                       <CardTitle>
                         {selectedTemplate
-                          ? selectedTemplate.replace(/_/g, ' ') + ' Template'
-                          : 'Select a Template'}
+                          ? selectedTemplate.replace(/_/g, " ") + " Template"
+                          : "Select a Template"}
                       </CardTitle>
                       <CardDescription>
                         {selectedTemplate
-                          ? 'Customize this template for your outreach efforts'
-                          : 'Choose a template type from the left'}
+                          ? "Customize this template for your outreach efforts"
+                          : "Choose a template type from the left"}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -503,17 +557,17 @@ ${domain}`
                         <Button
                           onClick={() => {
                             // Create download link
-                            const content = results.templates[selectedTemplate]
-                            const filename = `${selectedTemplate.replace(/_/g, '-')}-template.txt`
-                            const blob = new Blob([content], { type: 'text/plain' })
-                            const url = URL.createObjectURL(blob)
-                            const a = document.createElement('a')
-                            a.href = url
-                            a.download = filename
-                            document.body.appendChild(a)
-                            a.click()
-                            document.body.removeChild(a)
-                            URL.revokeObjectURL(url)
+                            const content = results.templates[selectedTemplate];
+                            const filename = `${selectedTemplate.replace(/_/g, "-")}-template.txt`;
+                            const blob = new Blob([content], { type: "text/plain" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
                           }}
                           className="w-full"
                         >
@@ -530,5 +584,5 @@ ${domain}`
         </div>
       </main>
     </div>
-  )
+  );
 }

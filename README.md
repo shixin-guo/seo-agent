@@ -80,9 +80,13 @@ Example output (keywords_report_[date].json):
 
 The tool generates comprehensive keyword reports with search intent analysis and competition metrics. Reports are saved in the `data/exports` directory.
 
-### Running Without API Keys (Demo Mode)
+### Running Without API Keys
 
-For testing without API keys, use the mock keyword demo script:
+There are two ways to run the tool without real API keys:
+
+#### 1. Demo Mode (Explicit Mock Data)
+
+For testing without API keys, you can use the mock keyword demo script:
 
 ```bash
 # Run directly with Poetry
@@ -93,6 +97,29 @@ make mock
 ```
 
 This will generate mock keyword data and save it to both JSON and CSV formats in the `data/exports` directory.
+
+#### 2. Configuring Testing Mode in config.yaml
+
+Alternatively, you can explicitly enable mock data usage in your configuration:
+
+```yaml
+# Testing Settings
+testing:
+  use_mock_data: true
+```
+
+This will make all modules use mock data instead of making real API calls. It's useful for development and testing without consuming API credits.
+
+#### New Example Script
+
+A new example script is available that demonstrates proper error handling and the improved keyword generation process:
+
+```bash
+# Run the new example script
+poetry run python examples/keyword_generator_demo.py --seed "digital marketing" --industry "saas"
+```
+
+This script provides detailed logging about the keyword generation process and will raise clear errors if API keys are missing.
 
 ### Content Optimization
 
@@ -116,24 +143,29 @@ poetry run python main.py backlink-research --domain "example.com" --competitors
 
 ### API Keys Setup
 
-1. Copy the template environment file:
+1. Create a `.env` file in the project root:
    ```bash
-   cp .env.template .env
+   touch .env
    ```
 
 2. Edit `.env` and add your API keys:
    ```
+   # Required for AI-powered features
    OPENAI_API_KEY=your_openai_api_key_here
+
+   # Optional keys for additional functionality
    SERPAPI_KEY=your_serpapi_key_here
-   AHREFS_API_KEY=your_ahrefs_api_key_here  # Optional
-   SEMRUSH_API_KEY=your_semrush_api_key_here  # Optional
+   AHREFS_API_KEY=your_ahrefs_api_key_here
+   SEMRUSH_API_KEY=your_semrush_api_key_here
    ```
 
 Required API keys depend on the features you use:
-- Keyword Research: OpenAI API key, SerpAPI key
+- Keyword Research: OpenAI API key, SerpAPI key (optional)
 - Content Optimization: OpenAI API key
-- Backlink Analysis: OpenAI API key, Ahrefs API key
+- Backlink Analysis: OpenAI API key, Ahrefs API key (optional)
 - Site Auditing: OpenAI API key
+
+> **Important:** The new error handling system will now raise clear errors if required API keys are missing, instead of silently falling back to mock data. This helps ensure you're getting real AI-generated results.
 
 ### Configuration File
 
@@ -146,7 +178,41 @@ defaults:
   crawl_depth: 50
   approval_required: true
   export_format: "json"
+
+# Output Preferences
+output:
+  reports_folder: "./data/exports"
+  auto_timestamp: true
+  email_reports: false
+
+# AI Settings
+ai:
+  model: "gpt-4-turbo-preview"
+  max_tokens: 2000
+  temperature: 0.3
+
+# API Keys (will be overridden by environment variables if present)
+apis:
+  # OpenAI API key can also be set in .env file as OPENAI_API_KEY
+  openai_key: ""
+  # Other API keys can be added here
+
+# Testing Settings
+testing:
+  # Set to true to explicitly use mock data instead of real API calls
+  use_mock_data: false
+
+# Fallback Settings
+fallbacks:
+  # Controls whether to fall back to mock data on API errors
+  # Set to false to prevent silent fallbacks to mock data
+  allow_mock_on_error: false
 ```
+
+The newly added testing and fallback settings help control when mock data is used:
+
+- `testing.use_mock_data`: When set to `true`, the system will explicitly use mock data instead of making API calls
+- `fallbacks.allow_mock_on_error`: When set to `true`, the system will fall back to mock data if API calls fail; when `false`, it will raise errors instead
 
 ## Development
 
@@ -281,15 +347,3 @@ The project uses GitHub Actions for CI/CD, which will automatically run all chec
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-
-
-poetry run seo-agent keyword-research --seed "conversational intelligence software" --industry "saas"
-
-poetry run python main.py audit-site --domain  "zoom.us" --depth 5
-
-
-poetry run python main.py optimize-content --file "blog_post.txt" --keywords "data/exports/keywords_report_2025_05_22.json" --output "optimized-content.txt" --creative
-
-poetry run python main.py backlink-research --domain "zoom.us" --competitors "https://www.microsoft.com/en-us/microsoft-teams/group-chat-software"

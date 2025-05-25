@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Search, Settings, FileText, Link2, BarChart2 } from "lucide-react"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Search, Settings, FileText, Link2, BarChart2 } from "lucide-react";
 
 export function MainNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="flex h-16 items-center px-4 border-b">
@@ -21,9 +21,7 @@ export function MainNav() {
           href="/keyword-research"
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === "/keyword-research"
-              ? "text-primary"
-              : "text-muted-foreground"
+            pathname === "/keyword-research" ? "text-primary" : "text-muted-foreground",
           )}
         >
           <div className="flex items-center space-x-2">
@@ -35,9 +33,7 @@ export function MainNav() {
           href="/content-optimizer"
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === "/content-optimizer"
-              ? "text-primary"
-              : "text-muted-foreground"
+            pathname === "/content-optimizer" ? "text-primary" : "text-muted-foreground",
           )}
         >
           <div className="flex items-center space-x-2">
@@ -49,9 +45,7 @@ export function MainNav() {
           href="/site-auditor"
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === "/site-auditor"
-              ? "text-primary"
-              : "text-muted-foreground"
+            pathname === "/site-auditor" ? "text-primary" : "text-muted-foreground",
           )}
         >
           <div className="flex items-center space-x-2">
@@ -63,9 +57,7 @@ export function MainNav() {
           href="/backlink-analyzer"
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === "/backlink-analyzer"
-              ? "text-primary"
-              : "text-muted-foreground"
+            pathname === "/backlink-analyzer" ? "text-primary" : "text-muted-foreground",
           )}
         >
           <div className="flex items-center space-x-2">
@@ -79,9 +71,7 @@ export function MainNav() {
           href="/settings"
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === "/settings"
-              ? "text-primary"
-              : "text-muted-foreground"
+            pathname === "/settings" ? "text-primary" : "text-muted-foreground",
           )}
         >
           <div className="flex items-center space-x-2">
@@ -91,5 +81,5 @@ export function MainNav() {
         </Link>
       </div>
     </div>
-  )
+  );
 }

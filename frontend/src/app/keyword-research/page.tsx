@@ -1,111 +1,155 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { MainNav } from "@/components/nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, Download, BarChart, PieChart, Tag } from "lucide-react"
+import { useState } from "react";
+import { MainNav } from "@/components/nav";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Download, BarChart, PieChart, Tag } from "lucide-react";
 
 interface Keyword {
-  keyword: string
-  intent: string
-  competition: string
+  keyword: string;
+  intent: string;
+  competition: string;
 }
 
 interface KeywordResponse {
-  seed_keyword: string
-  industry: string
-  total_keywords: number
-  keywords: Keyword[]
-  intent_groups: Record<string, string[]>
+  seed_keyword: string;
+  industry: string;
+  total_keywords: number;
+  keywords: Keyword[];
+  intent_groups: Record<string, string[]>;
 }
 
 export default function KeywordResearch() {
-  const [seedKeyword, setSeedKeyword] = useState("")
-  const [industry, setIndustry] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [results, setResults] = useState<KeywordResponse | null>(null)
-  const [activeTab, setActiveTab] = useState("all")
+  const [seedKeyword, setSeedKeyword] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<KeywordResponse | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!seedKeyword) return
+    e.preventDefault();
+    if (!seedKeyword) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
+    setError(null);
+
     try {
-      // In a real implementation, this would call the actual API
-      // For now, simulating the response
-      setTimeout(() => {
+      // Make API call to backend
+      const response = await fetch("http://localhost:8000/api/keywords", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ seed: seedKeyword, industry }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: "Unknown error" }));
+        throw new Error(errorData.detail || `API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error("Error generating keywords:", error);
+
+      // Show error message to user
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to generate keywords. Please check API keys and try again.",
+      );
+
+      // Only use mock data in development for testing UI
+      if (process.env.NODE_ENV === "development") {
+        console.log("Using mock data for development");
         const mockResponse: KeywordResponse = {
           seed_keyword: seedKeyword,
           industry: industry || "Not specified",
-          total_keywords: 20,
-          keywords: Array(20).fill(null).map((_, i) => ({
-            keyword: `${seedKeyword} ${i+1}`,
-            intent: ["informational", "commercial", "transactional", "navigational"][i % 4],
-            competition: ["low", "medium", "high"][i % 3]
-          })),
+          total_keywords: 15,
+          keywords: Array(15)
+            .fill(null)
+            .map((_, i) => {
+              const intentTypes = ["informational", "commercial", "transactional", "navigational"];
+              const competitionLevels = ["low", "medium", "high"];
+              return {
+                keyword: `${seedKeyword} for ${["beginners", "experts", "businesses", "startups", "enterprises"][i % 5]}`,
+                intent: intentTypes[i % intentTypes.length],
+                competition: competitionLevels[i % competitionLevels.length],
+              };
+            }),
           intent_groups: {
-            informational: Array(5).fill(null).map((_, i) => `${seedKeyword} information ${i+1}`),
-            commercial: Array(5).fill(null).map((_, i) => `buy ${seedKeyword} ${i+1}`),
-            transactional: Array(5).fill(null).map((_, i) => `${seedKeyword} service ${i+1}`),
-            navigational: Array(5).fill(null).map((_, i) => `${seedKeyword} website ${i+1}`)
-          }
-        }
-        setResults(mockResponse)
-        setIsLoading(false)
-      }, 1500)
-
-      // Actual API call would look like this:
-      // const response = await fetch('http://localhost:8000/api/keywords', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ seed: seedKeyword, industry }),
-      // })
-      // const data = await response.json()
-      // setResults(data)
-    } catch (error) {
-      console.error('Error generating keywords:', error)
+            informational: [
+              "What is " + seedKeyword,
+              seedKeyword + " tutorial",
+              seedKeyword + " guide",
+            ],
+            commercial: [
+              "Best " + seedKeyword,
+              "Top " + seedKeyword + " providers",
+              seedKeyword + " pricing",
+            ],
+            transactional: [
+              "Buy " + seedKeyword,
+              seedKeyword + " services",
+              "Hire " + seedKeyword + " expert",
+            ],
+            navigational: [
+              seedKeyword + " website",
+              seedKeyword + " login",
+              seedKeyword + " support",
+            ],
+          },
+        };
+        setResults(mockResponse);
+      }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleExport = (format: 'csv' | 'json') => {
-    if (!results) return
+  const handleExport = (format: "csv" | "json") => {
+    if (!results) return;
 
-    let content: string
-    let filename: string
+    let content: string;
+    let filename: string;
 
-    if (format === 'csv') {
+    if (format === "csv") {
       // Create CSV content
-      const header = 'keyword,intent,competition\n'
-      const rows = results.keywords.map(kw =>
-        `${kw.keyword},${kw.intent},${kw.competition}`
-      ).join('\n')
-      content = header + rows
-      filename = `keywords_${results.seed_keyword.replace(/\s+/g, '_')}.csv`
+      const header = "keyword,intent,competition\n";
+      const rows = results.keywords
+        .map((kw) => `${kw.keyword},${kw.intent},${kw.competition}`)
+        .join("\n");
+      content = header + rows;
+      filename = `keywords_${results.seed_keyword.replace(/\s+/g, "_")}.csv`;
     } else {
       // Create JSON content
-      content = JSON.stringify(results, null, 2)
-      filename = `keywords_${results.seed_keyword.replace(/\s+/g, '_')}.json`
+      content = JSON.stringify(results, null, 2);
+      filename = `keywords_${results.seed_keyword.replace(/\s+/g, "_")}.json`;
     }
 
     // Create download link
-    const blob = new Blob([content], { type: format === 'csv' ? 'text/csv' : 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([content], { type: format === "csv" ? "text/csv" : "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -152,17 +196,33 @@ export default function KeywordResearch() {
                   </div>
                 </form>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col items-stretch">
                 <Button
                   onClick={handleSubmit}
                   disabled={!seedKeyword || isLoading}
-                  className="w-full"
+                  className="w-full mb-2"
                 >
                   {isLoading ? (
                     <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Generating...
                     </span>
@@ -173,6 +233,12 @@ export default function KeywordResearch() {
                     </span>
                   )}
                 </Button>
+
+                {error && (
+                  <div className="w-full p-3 mt-2 text-sm text-red-800 bg-red-100 rounded-md">
+                    {error}
+                  </div>
+                )}
               </CardFooter>
             </Card>
 
@@ -187,11 +253,11 @@ export default function KeywordResearch() {
                       </CardDescription>
                     </div>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleExport('csv')}>
+                      <Button variant="outline" size="sm" onClick={() => handleExport("csv")}>
                         <Download className="mr-2 h-4 w-4" />
                         CSV
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleExport('json')}>
+                      <Button variant="outline" size="sm" onClick={() => handleExport("json")}>
                         <Download className="mr-2 h-4 w-4" />
                         JSON
                       </Button>
@@ -223,26 +289,30 @@ export default function KeywordResearch() {
                                 {keyword.keyword}
                               </div>
                               <div>
-                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                                  keyword.intent === 'informational'
-                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                                    : keyword.intent === 'commercial'
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                    : keyword.intent === 'transactional'
-                                    ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
-                                    : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
+                                    keyword.intent === "informational"
+                                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                                      : keyword.intent === "commercial"
+                                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                        : keyword.intent === "transactional"
+                                          ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+                                          : "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+                                  }`}
+                                >
                                   {keyword.intent}
                                 </span>
                               </div>
                               <div>
-                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                                  keyword.competition === 'low'
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                    : keyword.competition === 'medium'
-                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
+                                    keyword.competition === "low"
+                                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                      : keyword.competition === "medium"
+                                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                  }`}
+                                >
                                   {keyword.competition}
                                 </span>
                               </div>
@@ -277,5 +347,5 @@ export default function KeywordResearch() {
         </div>
       </main>
     </div>
-  )
+  );
 }

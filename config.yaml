@@ -16,3 +16,20 @@ ai:
   model: "gpt-4-turbo-preview"
   max_tokens: 2000
   temperature: 0.3
+
+# API Keys (will be overridden by environment variables if present)
+apis:
+  # OpenAI API key can also be set in .env file as OPENAI_API_KEY
+  openai_key: ""
+  # Other API keys can be added here
+
+# Testing Settings
+testing:
+  # Set to true to explicitly use mock data instead of real API calls
+  use_mock_data: false
+
+# Fallback Settings
+fallbacks:
+  # Controls whether to fall back to mock data on API errors
+  # Set to false to prevent silent fallbacks to mock data
+  allow_mock_on_error: false

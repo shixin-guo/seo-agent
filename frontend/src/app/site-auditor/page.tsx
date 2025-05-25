@@ -1,79 +1,94 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { MainNav } from "@/components/nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BarChart2, Download, Search, CheckCircle, AlertCircle, XCircle, ExternalLink } from "lucide-react"
+import { useState } from "react";
+import { MainNav } from "@/components/nav";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  BarChart2,
+  Download,
+  Search,
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  ExternalLink,
+} from "lucide-react";
 
 interface Issue {
-  type: string
-  severity: "high" | "medium" | "low"
-  affected_pages: string[]
-  description: string
+  type: string;
+  severity: "high" | "medium" | "low";
+  affected_pages: string[];
+  description: string;
 }
 
 interface Recommendation {
-  issue_type: string
-  priority: string
-  recommendation: string
-  affected_pages: string[]
+  issue_type: string;
+  priority: string;
+  recommendation: string;
+  affected_pages: string[];
 }
 
 interface SiteAuditResult {
-  domain: string
-  pages_crawled: number
-  total_issues: number
+  domain: string;
+  pages_crawled: number;
+  total_issues: number;
   issues_by_severity: {
-    high: number
-    medium: number
-    low: number
-  }
-  issues: Issue[]
-  recommendations: Recommendation[]
-  broken_links?: string[]
+    high: number;
+    medium: number;
+    low: number;
+  };
+  issues: Issue[];
+  recommendations: Recommendation[];
+  broken_links?: string[];
   summary?: {
-    total_pages: number
-    total_issues: number
+    total_pages: number;
+    total_issues: number;
     severity_counts: {
-      high: number
-      medium: number
-      low: number
-    }
-  }
-  action_plan: string
+      high: number;
+      medium: number;
+      low: number;
+    };
+  };
+  action_plan: string;
 }
 
 export default function SiteAuditor() {
-  const [domain, setDomain] = useState("")
-  const [maxPages, setMaxPages] = useState(50)
-  const [isLoading, setIsLoading] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [results, setResults] = useState<SiteAuditResult | null>(null)
-  const [activeTab, setActiveTab] = useState("input")
+  const [domain, setDomain] = useState("");
+  const [maxPages, setMaxPages] = useState(50);
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [results, setResults] = useState<SiteAuditResult | null>(null);
+  const [activeTab, setActiveTab] = useState("input");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!domain) return
+    e.preventDefault();
+    if (!domain) return;
 
-    setIsLoading(true)
-    setProgress(0)
-    setActiveTab("results")
+    setIsLoading(true);
+    setProgress(0);
+    setActiveTab("results");
 
     // Simulate progress updates
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 95) {
-          clearInterval(progressInterval)
-          return prev
+          clearInterval(progressInterval);
+          return prev;
         }
-        return prev + 5
-      })
-    }, 500)
+        return prev + 5;
+      });
+    }, 500);
 
     try {
       // In a real implementation, this would call the actual API
@@ -84,43 +99,43 @@ export default function SiteAuditor() {
             type: "missing_meta_description",
             severity: "medium",
             affected_pages: [`https://${domain}/about`, `https://${domain}/contact`],
-            description: "Pages missing meta descriptions"
+            description: "Pages missing meta descriptions",
           },
           {
             type: "slow_page_speed",
             severity: "high",
             affected_pages: [`https://${domain}/products`],
-            description: "Pages with slow loading times"
+            description: "Pages with slow loading times",
           },
           {
             type: "missing_alt_tags",
             severity: "low",
             affected_pages: [`https://${domain}/gallery`, `https://${domain}/blog/post1`],
-            description: "Images missing alt text"
+            description: "Images missing alt text",
           },
           {
             type: "broken_links",
             severity: "high",
             affected_pages: [`https://${domain}/resources/old-page`],
-            description: "Pages with broken links"
-          }
-        ]
+            description: "Pages with broken links",
+          },
+        ];
 
         const mockRecommendations: Recommendation[] = issuesWithSeverity.map((issue) => ({
           issue_type: issue.type,
           priority: issue.severity,
-          recommendation: `Fix ${issue.type.replace(/_/g, ' ')} on affected pages`,
-          affected_pages: issue.affected_pages
-        }))
+          recommendation: `Fix ${issue.type.replace(/_/g, " ")} on affected pages`,
+          affected_pages: issue.affected_pages,
+        }));
 
         const mockResult: SiteAuditResult = {
           domain,
           pages_crawled: maxPages,
           total_issues: mockIssues.length,
           issues_by_severity: {
-            high: mockIssues.filter(i => i.severity === "high").length,
-            medium: mockIssues.filter(i => i.severity === "medium").length,
-            low: mockIssues.filter(i => i.severity === "low").length
+            high: mockIssues.filter((i) => i.severity === "high").length,
+            medium: mockIssues.filter((i) => i.severity === "medium").length,
+            low: mockIssues.filter((i) => i.severity === "low").length,
           },
           issues: mockIssues,
           recommendations: mockRecommendations,
@@ -129,10 +144,10 @@ export default function SiteAuditor() {
             total_pages: maxPages,
             total_issues: mockIssues.length,
             severity_counts: {
-              high: mockIssues.filter(i => i.severity === "high").length,
-              medium: mockIssues.filter(i => i.severity === "medium").length,
-              low: mockIssues.filter(i => i.severity === "low").length
-            }
+              high: mockIssues.filter((i) => i.severity === "high").length,
+              medium: mockIssues.filter((i) => i.severity === "medium").length,
+              low: mockIssues.filter((i) => i.severity === "low").length,
+            },
           },
           action_plan: `# SEO Action Plan for ${domain}
 
@@ -148,14 +163,14 @@ export default function SiteAuditor() {
 ## Low Priority Items
 
 - Add alt text to images on https://${domain}/gallery and https://${domain}/blog/post1
-`
-        }
+`,
+        };
 
-        clearInterval(progressInterval)
-        setProgress(100)
-        setResults(mockResult)
-        setIsLoading(false)
-      }, 3000)
+        clearInterval(progressInterval);
+        setProgress(100);
+        setResults(mockResult);
+        setIsLoading(false);
+      }, 3000);
 
       // Actual API call would look like this:
       // const response = await fetch('http://localhost:8000/api/audit-site', {
@@ -170,30 +185,30 @@ export default function SiteAuditor() {
       // setProgress(100)
       // setResults(data)
     } catch (error) {
-      clearInterval(progressInterval)
-      console.error('Error auditing site:', error)
+      clearInterval(progressInterval);
+      console.error("Error auditing site:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDownload = () => {
-    if (!results) return
+    if (!results) return;
 
-    const content = results.action_plan
-    const filename = `seo_action_plan_${results.domain.replace(/\./g, '_')}.md`
+    const content = results.action_plan;
+    const filename = `seo_action_plan_${results.domain.replace(/\./g, "_")}.md`;
 
     // Create download link
-    const blob = new Blob([content], { type: 'text/markdown' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   // Ensure we have issues with severity
   const issuesWithSeverity = [
@@ -201,27 +216,27 @@ export default function SiteAuditor() {
       type: "missing_meta_description",
       severity: "medium",
       affected_pages: [`https://${domain}/about`, `https://${domain}/contact`],
-      description: "Pages missing meta descriptions"
+      description: "Pages missing meta descriptions",
     },
     {
       type: "slow_page_speed",
       severity: "high",
       affected_pages: [`https://${domain}/products`],
-      description: "Pages with slow loading times"
+      description: "Pages with slow loading times",
     },
     {
       type: "missing_alt_tags",
       severity: "low",
       affected_pages: [`https://${domain}/gallery`, `https://${domain}/blog/post1`],
-      description: "Images missing alt text"
+      description: "Images missing alt text",
     },
     {
       type: "broken_links",
       severity: "high",
       affected_pages: [`https://${domain}/resources/old-page`],
-      description: "Pages with broken links"
-    }
-  ]
+      description: "Pages with broken links",
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -233,7 +248,9 @@ export default function SiteAuditor() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList>
               <TabsTrigger value="input">Input</TabsTrigger>
-              <TabsTrigger value="results" disabled={!results && !isLoading}>Results</TabsTrigger>
+              <TabsTrigger value="results" disabled={!results && !isLoading}>
+                Results
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="input">
@@ -281,16 +298,28 @@ export default function SiteAuditor() {
                   </form>
                 </CardContent>
                 <CardFooter>
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!domain || isLoading}
-                    className="w-full"
-                  >
+                  <Button onClick={handleSubmit} disabled={!domain || isLoading} className="w-full">
                     {isLoading ? (
                       <span className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Starting Audit...
                       </span>
@@ -337,7 +366,8 @@ export default function SiteAuditor() {
                         <div>
                           <CardTitle>Audit Summary for {results.domain}</CardTitle>
                           <CardDescription>
-                            Analyzed {results.pages_crawled} pages and found {results.total_issues} issues.
+                            Analyzed {results.pages_crawled} pages and found {results.total_issues}{" "}
+                            issues.
                           </CardDescription>
                         </div>
                         <Button variant="outline" size="sm" onClick={handleDownload}>
@@ -349,7 +379,9 @@ export default function SiteAuditor() {
                     <CardContent>
                       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         <div className="flex flex-col items-center space-y-2">
-                          <div className="text-5xl font-bold">{results.issues_by_severity.high}</div>
+                          <div className="text-5xl font-bold">
+                            {results.issues_by_severity.high}
+                          </div>
                           <div className="flex items-center">
                             <AlertCircle className="h-4 w-4 text-red-500 mr-1" />
                             <span className="text-sm font-medium">High Priority Issues</span>
@@ -357,7 +389,9 @@ export default function SiteAuditor() {
                         </div>
 
                         <div className="flex flex-col items-center space-y-2">
-                          <div className="text-5xl font-bold">{results.issues_by_severity.medium}</div>
+                          <div className="text-5xl font-bold">
+                            {results.issues_by_severity.medium}
+                          </div>
                           <div className="flex items-center">
                             <AlertCircle className="h-4 w-4 text-yellow-500 mr-1" />
                             <span className="text-sm font-medium">Medium Priority Issues</span>
@@ -397,16 +431,18 @@ export default function SiteAuditor() {
                                     <AlertCircle className="h-5 w-5 text-blue-500 mr-2" />
                                   )}
                                   <span className="font-medium">
-                                    {issue.type.replace(/_/g, ' ')}
+                                    {issue.type.replace(/_/g, " ")}
                                   </span>
                                 </div>
-                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                  issue.severity === 'high'
-                                    ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                                    : issue.severity === 'medium'
-                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                                    : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                                    issue.severity === "high"
+                                      ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                                      : issue.severity === "medium"
+                                        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                        : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                                  }`}
+                                >
                                   {issue.severity}
                                 </span>
                               </div>
@@ -453,5 +489,5 @@ export default function SiteAuditor() {
         </div>
       </main>
     </div>
-  )
+  );
 }

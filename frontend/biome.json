@@ -1,0 +1,101 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "recommended": false,
+        "noSvgWithoutTitle": "off"
+      },
+      "complexity": {
+        "recommended": true,
+        "noForEach": "off",
+        "noBannedTypes": "error"
+      },
+      "style": {
+        "recommended": true,
+        "useBlockStatements": {
+          "level": "warn"
+        },
+        "useSelfClosingElements": {
+          "level": "warn",
+          "fix": "safe"
+        },
+        "useTemplate": "error",
+        "useConst": "error"
+      },
+      "suspicious": {
+        "recommended": true,
+        "noConsoleLog": {
+          "level": "warn",
+          "fix": "none"
+        },
+        "noDebugger": "warn",
+        "noExplicitAny": "off"
+      },
+      "correctness": {
+        "recommended": true,
+        "noUndeclaredVariables": "error",
+        "noUnusedVariables": {
+          "fix": "none",
+          "level": "warn"
+        },
+        "noUnusedImports": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "semicolons": "always"
+    },
+    "globals": ["browser", "defineBackground"]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      ".next/**",
+      "experimental/**",
+      "data-internal/**",
+      "pocketbase/**",
+      ".venv/**",
+      "public/**",
+      "draggable.js",
+      "bootstrap.js",
+      "bootstrap.css",
+      "bootstrap-theme.css",
+      "jquery.js",
+      "Fomantic-UI-CSS-2.9.0/**",
+      "jquery-ui.css",
+      "jquery-ui.js",
+      "**/*.min.js",
+      "**/*.min.css",
+      "**/*.bundle.js",
+      "**/*.bundle.css",
+      "**/*-min.js",
+      "**/__tests__/**",
+      "**/*-min.css",
+      ".vscode/**"
+    ]
+  }
+}

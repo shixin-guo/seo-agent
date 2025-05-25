@@ -2,7 +2,7 @@
  * API client for interacting with the SEO Agent backend.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 /**
  * Generates keyword research based on a seed keyword.
@@ -10,9 +10,9 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 export async function generateKeywords(seed: string, industry?: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/keywords`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ seed, industry }),
     });
@@ -23,7 +23,7 @@ export async function generateKeywords(seed: string, industry?: string) {
 
     return await response.json();
   } catch (error) {
-    console.error('Error generating keywords:', error);
+    console.error("Error generating keywords:", error);
     throw error;
   }
 }
@@ -35,21 +35,21 @@ export async function optimizeContent(
   contentFile: File,
   keywordsFile?: File,
   useAdvanced: boolean = true,
-  creative: boolean = false
+  creative: boolean = false,
 ) {
   try {
     const formData = new FormData();
-    formData.append('content_file', contentFile);
+    formData.append("content_file", contentFile);
 
     if (keywordsFile) {
-      formData.append('keywords_file', keywordsFile);
+      formData.append("keywords_file", keywordsFile);
     }
 
-    formData.append('use_advanced', String(useAdvanced));
-    formData.append('creative', String(creative));
+    formData.append("use_advanced", String(useAdvanced));
+    formData.append("creative", String(creative));
 
     const response = await fetch(`${API_BASE_URL}/api/optimize-content`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
 
@@ -59,7 +59,7 @@ export async function optimizeContent(
 
     return await response.json();
   } catch (error) {
-    console.error('Error optimizing content:', error);
+    console.error("Error optimizing content:", error);
     throw error;
   }
 }
@@ -70,9 +70,9 @@ export async function optimizeContent(
 export async function auditSite(domain: string, maxPages: number = 50) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/audit-site`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ domain, max_pages: maxPages }),
     });
@@ -83,7 +83,7 @@ export async function auditSite(domain: string, maxPages: number = 50) {
 
     return await response.json();
   } catch (error) {
-    console.error('Error auditing site:', error);
+    console.error("Error auditing site:", error);
     throw error;
   }
 }
@@ -94,18 +94,18 @@ export async function auditSite(domain: string, maxPages: number = 50) {
 export async function analyzeBacklinks(
   domain: string,
   competitors?: string[],
-  generateTemplates: boolean = false
+  generateTemplates: boolean = false,
 ) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/backlink-analysis`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         domain,
         competitors,
-        generate_templates: generateTemplates
+        generate_templates: generateTemplates,
       }),
     });
 
@@ -115,7 +115,7 @@ export async function analyzeBacklinks(
 
     return await response.json();
   } catch (error) {
-    console.error('Error analyzing backlinks:', error);
+    console.error("Error analyzing backlinks:", error);
     throw error;
   }
 }
@@ -128,7 +128,7 @@ export async function checkApiStatus() {
     const response = await fetch(`${API_BASE_URL}/`);
     return response.ok;
   } catch (error) {
-    console.error('API server not reachable:', error);
+    console.error("API server not reachable:", error);
     return false;
   }
 }

@@ -1,8 +1,15 @@
-import Link from "next/link"
-import { MainNav } from "@/components/nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, FileText, BarChart2, Link2 } from "lucide-react"
+import Link from "next/link";
+import { MainNav } from "@/components/nav";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Search, FileText, BarChart2, Link2 } from "lucide-react";
 
 export default function Home() {
   return (
@@ -16,7 +23,8 @@ export default function Home() {
                 SEO Agent - AI-powered SEO Automation
               </h1>
               <p className="max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Optimize your content, research keywords, analyze backlinks, and audit your site with AI-powered SEO tools.
+                Optimize your content, research keywords, analyze backlinks, and audit your site
+                with AI-powered SEO tools.
               </p>
             </div>
           </div>
@@ -75,7 +83,8 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm">
-                    Detect technical issues, receive prioritized recommendations, and generate action plans.
+                    Detect technical issues, receive prioritized recommendations, and generate
+                    action plans.
                   </p>
                 </CardContent>
                 <CardFooter>
@@ -95,7 +104,8 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm">
-                    Identify opportunities, compare with competitors, and generate outreach templates.
+                    Identify opportunities, compare with competitors, and generate outreach
+                    templates.
                   </p>
                 </CardContent>
                 <CardFooter>
@@ -118,5 +128,5 @@ export default function Home() {
         </p>
       </footer>
     </div>
-  )
+  );
 }
