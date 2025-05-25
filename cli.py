@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Main CLI interface for the SEO Agent tool.
+"""CLI interface for the SEO Agent tool.
 
 This module provides command-line interface functionality for various SEO operations
 including keyword research, content optimization, site auditing, and backlink analysis.
@@ -13,49 +13,13 @@ from datetime import datetime
 from typing import Any, Optional
 
 import click
-import yaml
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Import core modules and utilities
+from seo_agent.core.keyword_engine import KeywordEngine
+from utils import load_config
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Import core modules - must be after adding to path
-from seo_agent.core.keyword_engine import KeywordEngine  # noqa: E402
-
-
-# Load configuration
-def load_config() -> dict[str, Any]:
-    """Load and merge configuration from YAML file and environment variables.
-
-    Returns:
-        dict[str, Any]: Configuration dictionary with API keys and settings.
-    """
-    config_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "config.yaml"
-    )
-    with open(config_path) as f:
-        config = yaml.safe_load(f)
-
-    # Add API keys from environment variables
-    api_keys = {
-        "openai_key": os.getenv("OPENAI_API_KEY"),
-        "serpapi_key": os.getenv("SERPAPI_KEY"),
-        "ahrefs_key": os.getenv("AHREFS_API_KEY"),
-        "semrush_key": os.getenv("SEMRUSH_API_KEY"),
-    }
-
-    # Remove None values
-    api_keys = {k: v for k, v in api_keys.items() if v is not None}
-
-    # Merge with config
-    if "apis" not in config:
-        config["apis"] = {}
-    config["apis"].update(api_keys)
-
-    return config  # type: ignore[no-any-return]
 
 
 def validate_api_keys(config: dict[str, Any], required_apis: list[str]) -> None:
@@ -71,7 +35,6 @@ def validate_api_keys(config: dict[str, Any], required_apis: list[str]) -> None:
         sys.exit(1)
 
 
-# Approval system
 def require_approval(operation: str, details: str, config: dict[str, Any]) -> bool:
     """Ask for user approval before proceeding with an operation.
 
@@ -150,7 +113,9 @@ def keyword_research(seed: str, industry: Optional[str], output: Optional[str]) 
     if not output:
         timestamp = datetime.now().strftime("%Y_%m_%d")
         output = f"keywords_report_{timestamp}.json"
-        output_path = os.path.join(config["output"]["reports_folder"], output)
+        output_path = os.path.join(
+            config.get("output", {}).get("reports_folder", "./data/exports"), output
+        )
     else:
         output_path = output
 
@@ -542,6 +507,27 @@ def backlink_research(
         import traceback
 
         click.echo(traceback.format_exc())
+        sys.exit(1)
+
+
+@cli.command("serve")
+@click.option("--host", default="0.0.0.0", help="Host to bind the server to")
+@click.option("--port", default=8000, help="Port to bind the server to")
+@click.option("--reload", is_flag=True, help="Enable auto-reload for development")
+def serve(host: str, port: int, reload: bool) -> None:
+    """Start the FastAPI server."""
+    import uvicorn
+
+    click.echo(f"🚀 Starting SEO Agent API server on {host}:{port}")
+    if reload:
+        click.echo("🔄 Auto-reload enabled for development")
+
+    try:
+        uvicorn.run("api:app", host=host, port=port, reload=reload)
+    except KeyboardInterrupt:
+        click.echo("\n👋 Server stopped by user")
+    except Exception as e:
+        click.echo(f"❌ Error starting server: {str(e)}")
         sys.exit(1)
 
 

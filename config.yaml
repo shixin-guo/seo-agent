@@ -3,13 +3,10 @@ defaults:
   max_keywords: 100
   crawl_depth: 50
   approval_required: true
-  export_format: "json"
 
-# Output Preferences
+# Output Preferences (for CLI)
 output:
   reports_folder: "./data/exports"
-  auto_timestamp: true
-  email_reports: false
 
 # AI Settings
 ai:
@@ -19,17 +16,7 @@ ai:
 
 # API Keys (will be overridden by environment variables if present)
 apis:
-  # OpenAI API key can also be set in .env file as OPENAI_API_KEY
   openai_key: ""
-  # Other API keys can be added here
-
-# Testing Settings
-testing:
-  # Set to true to explicitly use mock data instead of real API calls
-  use_mock_data: false
-
-# Fallback Settings
-fallbacks:
-  # Controls whether to fall back to mock data on API errors
-  # Set to false to prevent silent fallbacks to mock data
-  allow_mock_on_error: false
+  serpapi_key: ""
+  ahrefs_key: ""
+  semrush_key: ""
