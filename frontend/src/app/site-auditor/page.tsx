@@ -1,29 +1,27 @@
 "use client";
 
-import { useState } from "react";
 import { MainNav } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  BarChart2,
-  Download,
-  Search,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
-  ExternalLink,
+    AlertCircle,
+    BarChart2,
+    Download,
+    ExternalLink
 } from "lucide-react";
+import type * as React from "react";
+import { useState } from "react";
 
 interface Issue {
   type: string;
@@ -73,7 +71,9 @@ export default function SiteAuditor() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!domain) return;
+    if (!domain) {
+      return;
+    }
 
     setIsLoading(true);
     setProgress(0);
@@ -193,7 +193,9 @@ export default function SiteAuditor() {
   };
 
   const handleDownload = () => {
-    if (!results) return;
+    if (!results) {
+      return;
+    }
 
     const content = results.action_plan;
     const filename = `seo_action_plan_${results.domain.replace(/\./g, "_")}.md`;
@@ -289,7 +291,7 @@ export default function SiteAuditor() {
                         min={1}
                         max={200}
                         value={maxPages}
-                        onChange={(e) => setMaxPages(parseInt(e.target.value))}
+                        onChange={(e) => setMaxPages(Number.parseInt(e.target.value))}
                       />
                       <p className="text-xs text-muted-foreground">
                         Higher values provide more thorough audits but take longer.
@@ -314,12 +316,12 @@ export default function SiteAuditor() {
                             r="10"
                             stroke="currentColor"
                             strokeWidth="4"
-                          ></circle>
+                          />
                           <path
                             className="opacity-75"
                             fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
+                          />
                         </svg>
                         Starting Audit...
                       </span>
@@ -419,8 +421,8 @@ export default function SiteAuditor() {
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
-                          {results.issues.map((issue, index) => (
-                            <div key={index} className="border rounded-md p-4">
+                          {results.issues.map((issue) => (
+                            <div key={`${issue.type}-${issue.severity}`} className="border rounded-md p-4">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center">
                                   {issue.severity === "high" ? (
@@ -452,8 +454,8 @@ export default function SiteAuditor() {
                               <div className="text-xs text-muted-foreground">
                                 <div className="font-medium mb-1">Affected Pages:</div>
                                 <ul className="space-y-1">
-                                  {issue.affected_pages.map((page, i) => (
-                                    <li key={i} className="flex items-center">
+                                  {issue.affected_pages.map((page) => (
+                                    <li key={page} className="flex items-center">
                                       <ExternalLink className="h-3 w-3 mr-1" />
                                       <span>{page}</span>
                                     </li>

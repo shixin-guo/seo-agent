@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { MainNav } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +12,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Download, BarChart, PieChart, Tag } from "lucide-react";
+import { Download, Search, Tag } from "lucide-react";
+import type * as React from "react";
+import { useState } from "react";
 
 interface Keyword {
   keyword: string;
@@ -34,12 +35,13 @@ export default function KeywordResearch() {
   const [industry, setIndustry] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<KeywordResponse | null>(null);
-  const [activeTab, setActiveTab] = useState("all");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!seedKeyword) return;
+    if (!seedKeyword) {
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
@@ -73,7 +75,7 @@ export default function KeywordResearch() {
 
       // Only use mock data in development for testing UI
       if (process.env.NODE_ENV === "development") {
-        console.log("Using mock data for development");
+        console.info("Using mock data for development");
         const mockResponse: KeywordResponse = {
           seed_keyword: seedKeyword,
           industry: industry || "Not specified",
@@ -91,24 +93,24 @@ export default function KeywordResearch() {
             }),
           intent_groups: {
             informational: [
-              "What is " + seedKeyword,
-              seedKeyword + " tutorial",
-              seedKeyword + " guide",
+              `What is ${seedKeyword}`,
+              `${seedKeyword} tutorial`,
+              `${seedKeyword} guide`,
             ],
             commercial: [
-              "Best " + seedKeyword,
-              "Top " + seedKeyword + " providers",
-              seedKeyword + " pricing",
+              `Best ${seedKeyword}`,
+              `Top ${seedKeyword} providers`,
+              `${seedKeyword} pricing`,
             ],
             transactional: [
-              "Buy " + seedKeyword,
-              seedKeyword + " services",
-              "Hire " + seedKeyword + " expert",
+              `Buy ${seedKeyword}`,
+              `${seedKeyword} services`,
+              `Hire ${seedKeyword} expert`,
             ],
             navigational: [
-              seedKeyword + " website",
-              seedKeyword + " login",
-              seedKeyword + " support",
+              `${seedKeyword} website`,
+              `${seedKeyword} login`,
+              `${seedKeyword} support`,
             ],
           },
         };
@@ -120,7 +122,9 @@ export default function KeywordResearch() {
   };
 
   const handleExport = (format: "csv" | "json") => {
-    if (!results) return;
+    if (!results) {
+      return;
+    }
 
     let content: string;
     let filename: string;
@@ -217,12 +221,12 @@ export default function KeywordResearch() {
                           r="10"
                           stroke="currentColor"
                           strokeWidth="4"
-                        ></circle>
+                        />
                         <path
                           className="opacity-75"
                           fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
+                        />
                       </svg>
                       Generating...
                     </span>
@@ -265,7 +269,7 @@ export default function KeywordResearch() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
+                  <Tabs defaultValue="all" className="w-full">
                     <TabsList className="grid w-full grid-cols-5">
                       <TabsTrigger value="all">All</TabsTrigger>
                       <TabsTrigger value="informational">Informational</TabsTrigger>
@@ -282,8 +286,8 @@ export default function KeywordResearch() {
                           <div>Competition</div>
                         </div>
                         <div className="divide-y">
-                          {results.keywords.map((keyword, index) => (
-                            <div key={index} className="grid grid-cols-3 p-3">
+                          {results.keywords.map((keyword) => (
+                            <div key={`${keyword.keyword}-${keyword.intent}`} className="grid grid-cols-3 p-3">
                               <div className="flex items-center">
                                 <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
                                 {keyword.keyword}
@@ -329,8 +333,8 @@ export default function KeywordResearch() {
                             <div>{intent.charAt(0).toUpperCase() + intent.slice(1)} Keywords</div>
                           </div>
                           <div className="divide-y">
-                            {keywords.map((keyword, index) => (
-                              <div key={index} className="p-3 flex items-center">
+                            {keywords.map((keyword) => (
+                              <div key={keyword} className="p-3 flex items-center">
                                 <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
                                 {keyword}
                               </div>

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome lint ./src",
+    "lint": "biome lint --unsafe --write .",
     "lint:next": "next lint",
     "format": "biome format --write ./src",
     "check": "biome check --apply ./src",

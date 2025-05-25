@@ -24,6 +24,7 @@ import {
   Upload,
   XCircle
 } from "lucide-react";
+import type * as React from "react";
 import { useRef, useState } from "react";
 
 interface ContentAnalysis {
@@ -64,7 +65,7 @@ export default function ContentOptimizer() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       setFile(e.target.files[0]);
 
       // Read file content
@@ -79,14 +80,16 @@ export default function ContentOptimizer() {
   };
 
   const handleKeywordsFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       setKeywordsFile(e.target.files[0]);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content && !file) return;
+    if (!content && !file) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -158,7 +161,9 @@ export default function ContentOptimizer() {
   };
 
   const handleDownload = () => {
-    if (!results) return;
+    if (!results) {
+      return;
+    }
 
     const content = results.optimized_content;
     const filename = "optimized-content.txt";
@@ -318,12 +323,12 @@ export default function ContentOptimizer() {
                               r="10"
                               stroke="currentColor"
                               strokeWidth="4"
-                            ></circle>
+                            />
                             <path
                               className="opacity-75"
                               fill="currentColor"
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
+                            />
                           </svg>
                           Optimizing...
                         </span>
@@ -434,8 +439,8 @@ export default function ContentOptimizer() {
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-4">
-                          {results.suggestions.map((suggestion, index) => (
-                            <div key={index} className="flex">
+                          {results.suggestions.map((suggestion) => (
+                            <div key={`${suggestion.type}-${suggestion.suggestion}`} className="flex">
                               <div className="mr-3 mt-0.5">
                                 {suggestion.type === "heading" ? (
                                   <BarChart className="h-5 w-5 text-blue-500" />

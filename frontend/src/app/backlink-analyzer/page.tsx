@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { MainNav } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,19 +11,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Link2,
-  ExternalLink,
   Download,
-  BarChart,
-  Trophy,
+  ExternalLink,
+  Link2,
   Mail,
-  TrendingUp,
-  Network,
 } from "lucide-react";
+import type * as React from "react";
+import { useState } from "react";
 
 interface BacklinkSummary {
   total_backlinks: number;
@@ -68,7 +65,9 @@ export default function BacklinkAnalyzer() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!domain) return;
+    if (!domain) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -189,7 +188,9 @@ ${domain}`,
   };
 
   const handleExport = (format: "csv" | "json") => {
-    if (!results) return;
+    if (!results) {
+      return;
+    }
 
     let content: string;
     let filename: string;
@@ -317,12 +318,12 @@ ${domain}`,
                             r="10"
                             stroke="currentColor"
                             strokeWidth="4"
-                          ></circle>
+                          />
                           <path
                             className="opacity-75"
                             fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
+                          />
                         </svg>
                         Analyzing...
                       </span>
@@ -409,14 +410,12 @@ ${domain}`,
                               <div className="font-medium">{results.domain}</div>
                               <div>{results.summary.total_backlinks}</div>
                             </div>
-                            {Object.entries(results.competitors).map(
-                              ([competitor, data], index) => (
-                                <div key={index} className="grid grid-cols-2 p-3">
-                                  <div>{competitor}</div>
-                                  <div>{data.backlinks?.length || 0}</div>
-                                </div>
-                              ),
-                            )}
+                            {Object.entries(results.competitors).map(([competitor, data]) => (
+                              <div key={competitor} className="grid grid-cols-2 p-3">
+                                <div>{competitor}</div>
+                                <div>{data.backlinks?.length || 0}</div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </CardContent>
@@ -440,8 +439,8 @@ ${domain}`,
                           <div>Score</div>
                         </div>
                         <div className="divide-y">
-                          {results.opportunities.map((opp, index) => (
-                            <div key={index} className="grid grid-cols-6 p-3">
+                          {results.opportunities.map((opp) => (
+                            <div key={`${opp.source_domain}-${opp.source_url}`} className="grid grid-cols-6 p-3">
                               <div className="col-span-2">
                                 <div className="font-medium">{opp.source_domain}</div>
                                 <div className="text-xs text-muted-foreground flex items-center mt-1">
@@ -527,7 +526,7 @@ ${domain}`,
                     <CardHeader>
                       <CardTitle>
                         {selectedTemplate
-                          ? selectedTemplate.replace(/_/g, " ") + " Template"
+                          ? `${selectedTemplate.replace(/_/g, " ")} Template`
                           : "Select a Template"}
                       </CardTitle>
                       <CardDescription>
@@ -556,6 +555,7 @@ ${domain}`,
                       <CardFooter>
                         <Button
                           onClick={() => {
+                            if (!results?.templates) { return; }
                             // Create download link
                             const content = results.templates[selectedTemplate];
                             const filename = `${selectedTemplate.replace(/_/g, "-")}-template.txt`;

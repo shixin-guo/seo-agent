@@ -34,8 +34,8 @@ export async function generateKeywords(seed: string, industry?: string) {
 export async function optimizeContent(
   contentFile: File,
   keywordsFile?: File,
-  useAdvanced: boolean = true,
-  creative: boolean = false,
+  useAdvanced = true,
+  creative = false,
 ) {
   try {
     const formData = new FormData();
@@ -67,7 +67,7 @@ export async function optimizeContent(
 /**
  * Performs a technical SEO audit on a website.
  */
-export async function auditSite(domain: string, maxPages: number = 50) {
+export async function auditSite(domain: string, maxPages = 50) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/audit-site`, {
       method: "POST",
@@ -94,7 +94,7 @@ export async function auditSite(domain: string, maxPages: number = 50) {
 export async function analyzeBacklinks(
   domain: string,
   competitors?: string[],
-  generateTemplates: boolean = false,
+  generateTemplates = false,
 ) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/backlink-analysis`, {

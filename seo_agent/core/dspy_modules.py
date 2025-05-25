@@ -98,9 +98,10 @@ class KeywordGenerator(dspy.Module):
             logger.info("Using mock data as configured in settings")
             from tests.mock.mock_keyword_data import generate_mock_keywords
 
-            mock_data: MockKeywordResponse = generate_mock_keywords(
+            mock_data_result = generate_mock_keywords(
                 seed_keyword, industry or "general"
             )
+            mock_data = cast(MockKeywordResponse, mock_data_result)
             return mock_data["keywords"]
 
         # Define the signature for the LM
@@ -180,10 +181,11 @@ class KeywordGenerator(dspy.Module):
                         )
                         from tests.mock.mock_keyword_data import generate_mock_keywords
 
-                        mock_data: MockKeywordResponse = generate_mock_keywords(
+                        fallback_data_result = generate_mock_keywords(
                             seed_keyword, industry or "general"
                         )
-                        return mock_data["keywords"]
+                        fallback_data = cast(MockKeywordResponse, fallback_data_result)
+                        return fallback_data["keywords"]
                     else:
                         logger.error(
                             "Failed to parse keywords and mock fallback is disabled"
@@ -212,10 +214,11 @@ class KeywordGenerator(dspy.Module):
                 logger.warning("Using mock data as fallback due to API error")
                 from tests.mock.mock_keyword_data import generate_mock_keywords
 
-                mock_data: MockKeywordResponse = generate_mock_keywords(
+                error_data_result = generate_mock_keywords(
                     seed_keyword, industry or "general"
                 )
-                return mock_data["keywords"]
+                error_data = cast(MockKeywordResponse, error_data_result)
+                return error_data["keywords"]
             else:
                 # Re-raise the exception if we don't want to fall back to mock data
                 raise

@@ -91,6 +91,7 @@
       "**/*.min.js",
       "**/*.min.css",
       "**/*.bundle.js",
+      "jest.*.js",
       "**/*.bundle.css",
       "**/*-min.js",
       "**/__tests__/**",
