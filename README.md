@@ -281,3 +281,15 @@ The project uses GitHub Actions for CI/CD, which will automatically run all chec
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+
+
+poetry run seo-agent keyword-research --seed "conversational intelligence software" --industry "saas"
+
+poetry run python main.py audit-site --domain  "zoom.us" --depth 5
+
+
+poetry run python main.py optimize-content --file "blog_post.txt" --keywords "data/exports/keywords_report_2025_05_22.json" --output "optimized-content.txt" --creative
+
+poetry run python main.py backlink-research --domain "zoom.us" --competitors "https://www.microsoft.com/en-us/microsoft-teams/group-chat-software"

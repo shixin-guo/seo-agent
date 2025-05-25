@@ -1,75 +1,73 @@
 {
-  "seed_keyword": "digital marketing",
+  "seed_keyword": "conversational intelligence software",
   "industry": "saas",
   "total_keywords": 10,
   "keywords": [
     {
-      "keyword": "digital marketing strategies for SaaS",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "best SaaS digital marketing tools",
+      "keyword": "best conversational intelligence software",
       "intent": "commercial",
       "competition": "medium"
     },
     {
-      "keyword": "SaaS digital marketing agency",
-      "intent": "transactional",
-      "competition": "high"
-    },
-    {
-      "keyword": "how to improve SaaS sales with digital marketing",
-      "intent": "informational",
+      "keyword": "conversational intelligence software for sales",
+      "intent": "commercial",
       "competition": "medium"
     },
     {
-      "keyword": "digital marketing trends in SaaS",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "SaaS digital marketing case studies",
+      "keyword": "how conversational intelligence software works",
       "intent": "informational",
       "competition": "low"
     },
     {
-      "keyword": "digital marketing software for SaaS companies",
+      "keyword": "conversational intelligence software pricing",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "top conversational intelligence platforms",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "conversational intelligence software reviews",
+      "intent": "informational",
+      "competition": "medium"
+    },
+    {
+      "keyword": "AI conversational intelligence tools",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "conversational intelligence software features",
+      "intent": "informational",
+      "competition": "low"
+    },
+    {
+      "keyword": "conversational intelligence software comparison",
+      "intent": "commercial",
+      "competition": "medium"
+    },
+    {
+      "keyword": "conversational AI for customer service",
       "intent": "commercial",
       "competition": "high"
-    },
-    {
-      "keyword": "SaaS SEO strategies",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "SaaS PPC advertising tips",
-      "intent": "informational",
-      "competition": "medium"
-    },
-    {
-      "keyword": "SaaS digital marketing courses",
-      "intent": "transactional",
-      "competition": "medium"
     }
   ],
   "intent_groups": {
-    "informational": [
-      "digital marketing strategies for SaaS",
-      "how to improve SaaS sales with digital marketing",
-      "digital marketing trends in SaaS",
-      "SaaS digital marketing case studies",
-      "SaaS SEO strategies",
-      "SaaS PPC advertising tips"
-    ],
     "commercial": [
-      "best SaaS digital marketing tools",
-      "digital marketing software for SaaS companies"
+      "best conversational intelligence software",
+      "conversational intelligence software for sales",
+      "conversational intelligence software pricing",
+      "top conversational intelligence platforms",
+      "AI conversational intelligence tools",
+      "conversational intelligence software comparison",
+      "conversational AI for customer service"
     ],
-    "transactional": [
-      "SaaS digital marketing agency",
-      "SaaS digital marketing courses"
+    "informational": [
+      "how conversational intelligence software works",
+      "conversational intelligence software reviews",
+      "conversational intelligence software features"
     ]
   }
 }
