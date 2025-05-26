@@ -103,11 +103,8 @@ def keyword_research(seed: str, industry: Optional[str], output: Optional[str]) 
         results = engine.generate_keywords(seed, industry)
         click.echo(f"Generated {results['total_keywords']} keywords.")
     except Exception as e:
-        click.echo(f"Error generating keywords: {str(e)}")
-        # Use mock data as fallback
-        from tests.mock.mock_keyword_data import generate_mock_keywords
-
-        results = generate_mock_keywords(seed, industry or "general")
+        click.echo(f"❌ Error generating keywords: {str(e)}")
+        sys.exit(1)
 
     # Generate default output filename if not provided
     if not output:
@@ -391,17 +388,16 @@ def backlink_research(
     """Research backlink opportunities."""
     config = load_config()
 
-    # Validate required API keys - make ahrefs_key or semrush_key optional
-    # since we have mock implementation
+    # Check for backlink API keys (optional for some features)
     api_keys_available = []
     for key in ["ahrefs_key", "semrush_key"]:
         if config.get("apis", {}).get(key):
             api_keys_available.append(key)
 
     if not api_keys_available:
-        click.echo("⚠️ No backlink API keys found. Using mock data for demonstration.")
+        click.echo("⚠️ No backlink API keys found. Some features may be limited.")
         click.echo(
-            "For production use, add AHREFS_API_KEY or SEMRUSH_API_KEY to your .env file."
+            "For full functionality, add AHREFS_API_KEY or SEMRUSH_API_KEY to your .env file."
         )
 
     comp_list = competitors.split(",") if competitors else []

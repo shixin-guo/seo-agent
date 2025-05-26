@@ -71,117 +71,29 @@ export default function BacklinkAnalyzer() {
 
     setIsLoading(true);
     try {
-      // In a real implementation, this would call the actual API
-      // For now, simulating the response
-      setTimeout(() => {
-        const competitorsList = competitors
-          .split(",")
-          .map((c) => c.trim())
-          .filter(Boolean);
-
-        const mockCompetitorData: CompetitorData = {};
-        competitorsList.forEach((comp) => {
-          mockCompetitorData[comp] = {
-            domain_authority: Math.floor(Math.random() * 50) + 30,
-            backlinks: Array(Math.floor(Math.random() * 50) + 10).fill(null),
-          };
-        });
-
-        const mockOpportunities: BacklinkOpportunity[] = Array(15)
-          .fill(null)
-          .map((_, i) => ({
-            source_domain: `example${i}.com`,
-            source_url: `https://example${i}.com/blog/post${i}`,
-            domain_authority: Math.floor(Math.random() * 50) + 30,
-            link_type: ["dofollow", "nofollow"][i % 2],
-            competitor: competitorsList[i % competitorsList.length] || "N/A",
-            opportunity_score: Math.floor(Math.random() * 100),
-          }));
-
-        // Sort by opportunity score (highest first)
-        mockOpportunities.sort((a, b) => b.opportunity_score - a.opportunity_score);
-
-        const mockTemplates: Record<string, string> = {
-          resource_mention: `Subject: Your [Topic] Guide on ${domain}
-
-Hello [Name],
-
-I noticed you mentioned [Competitor] in your article about [Topic].
-
-We've recently published a comprehensive guide on [Topic] at ${domain} that includes [unique value proposition]. I think it would be a valuable addition to your article.
-
-Would you consider adding a link to our guide? I'd be happy to share it on our social media channels.
-
-Best regards,
-[Your Name]
-${domain}`,
-          broken_link: `Subject: Broken Link on Your Website
-
-Hello [Name],
-
-I was reading your article on [Topic] and noticed a broken link to [Broken URL].
-
-We have a similar resource on ${domain} that could replace this link: [Your URL]
-
-This would help your readers find the information they're looking for while fixing the broken link.
-
-Let me know if you'd like to use our resource!
-
-Best regards,
-[Your Name]
-${domain}`,
-          guest_post: `Subject: Guest Post Opportunity
-
-Hello [Name],
-
-I've been following your blog for some time and enjoy your content about [Topic].
-
-I'd like to propose a guest post titled "[Proposed Title]" that would provide value to your audience by [Benefit].
-
-I've written for [Other Sites] in the past and maintain high standards for quality and originality.
-
-Would you be interested in this contribution?
-
-Best regards,
-[Your Name]
-${domain}`,
-        };
-
-        const mockResult: BacklinkAnalysisResult = {
+      const competitorsList = competitors.split(",").map(c => c.trim()).filter(Boolean);
+      const response = await fetch('http://localhost:8000/api/backlink-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           domain,
-          summary: {
-            total_backlinks: 187,
-            unique_domains: 42,
-            dofollow_count: 124,
-            nofollow_count: 63,
-          },
-          opportunities: mockOpportunities,
-          competitors: mockCompetitorData,
-          templates: generateTemplates ? mockTemplates : undefined,
-        };
+          competitors: competitorsList,
+          generate_templates: generateTemplates
+        }),
+      });
 
-        setResults(mockResult);
-        setIsLoading(false);
-        setActiveTab("results");
-      }, 2000);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      // Actual API call would look like this:
-      // const competitorsList = competitors.split(",").map(c => c.trim()).filter(Boolean)
-      // const response = await fetch('http://localhost:8000/api/backlink-analysis', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     domain,
-      //     competitors: competitorsList,
-      //     generate_templates: generateTemplates
-      //   }),
-      // })
-      // const data = await response.json()
-      // setResults(data)
+      const data = await response.json();
+      setResults(data);
+      setActiveTab("results");
     } catch (error) {
       console.error("Error analyzing backlinks:", error);
+      // You might want to show an error message to the user here
     } finally {
       setIsLoading(false);
     }

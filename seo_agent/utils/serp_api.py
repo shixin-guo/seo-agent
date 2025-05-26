@@ -9,45 +9,24 @@ class SerpAPI:
 
     def search(self, query: str, num_results: int = 10) -> Dict[str, Any]:
         """Perform a search and get results"""
-        # This is a placeholder implementation
-        # In a real implementation, this would use a real SERP API
+        if not self.api_key:
+            raise ValueError(
+                "SERPAPI_KEY not found. Please add SERPAPI_KEY to your environment variables."
+            )
 
-        if self.api_key:
-            # Use SERP API if key is available
-            return self._search_with_api(query, num_results)
-        else:
-            # Fallback to mock data
-            return self._mock_search_results(query, num_results)
+        return self._search_with_api(query, num_results)
 
     def _search_with_api(self, query: str, num_results: int) -> Dict[str, Any]:
         """Search using the SERP API"""
-        # This is a placeholder implementation
-        # In a real implementation, this would make an API call
-
-        # Endpoint would be something like:
+        # TODO: Implement actual SERP API integration
+        # This would make an API call to SerpAPI
         # url = f"https://serpapi.com/search?q={query}&num={num_results}&api_key={self.api_key}"
         # response = requests.get(url)
         # return response.json()
 
-        # For now, return mock data
-        return self._mock_search_results(query, num_results)
-
-    def _mock_search_results(self, query: str, num_results: int) -> Dict[str, Any]:
-        """Generate mock search results for testing"""
-        results: Dict[str, Any] = {"query": query, "organic_results": []}
-
-        # Generate mock results
-        for i in range(min(num_results, 10)):
-            results["organic_results"].append(
-                {
-                    "position": i + 1,
-                    "title": f"Sample result {i+1} for {query}",
-                    "url": f"https://example.com/result-{i+1}",
-                    "snippet": f"This is a sample search result snippet for the query: {query}...",
-                }
-            )
-
-        return results
+        raise NotImplementedError(
+            "SERP API integration not yet implemented. Please implement the actual API call."
+        )
 
     def analyze_competition(self, keyword: str) -> Dict[str, Any]:
         """Analyze competition for a keyword"""

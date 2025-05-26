@@ -138,9 +138,11 @@ class BacklinkAnalyzer:
         # Use Semrush API if available
         elif self.semrush_key:
             backlinks = self._get_backlinks_from_semrush(domain)
-        # Use mock data if no API keys are available
         else:
-            backlinks = self._get_mock_backlinks(domain)
+            # No API keys available - return empty list or raise error
+            raise ValueError(
+                "No backlink API keys available. Please add AHREFS_API_KEY or SEMRUSH_API_KEY to your environment."
+            )
 
         return backlinks[: self.max_results]
 
@@ -153,13 +155,11 @@ class BacklinkAnalyzer:
         Returns:
             List of backlinks
         """
-        # This would use the Ahrefs API in a real implementation
-        # For now, return mock data with a note that it's using Ahrefs data
-        mock_data = self._get_mock_backlinks(domain)
-        for item in mock_data:
-            item["source"] = "ahrefs"
-
-        return mock_data
+        # TODO: Implement Ahrefs API integration
+        # For now, this is a placeholder that would make actual API calls
+        raise NotImplementedError(
+            "Ahrefs API integration not yet implemented. Please use Semrush API or implement Ahrefs integration."
+        )
 
     def _get_backlinks_from_semrush(self, domain: str) -> List[Dict[str, Any]]:
         """Get backlinks from Semrush API.
@@ -170,59 +170,11 @@ class BacklinkAnalyzer:
         Returns:
             List of backlinks
         """
-        # This would use the Semrush API in a real implementation
-        # For now, return mock data with a note that it's using Semrush data
-        mock_data = self._get_mock_backlinks(domain)
-        for item in mock_data:
-            item["source"] = "semrush"
-
-        return mock_data
-
-    def _get_mock_backlinks(self, domain: str) -> List[Dict[str, Any]]:
-        """Generate mock backlink data for testing.
-
-        Args:
-            domain: Domain to generate mock backlinks for
-
-        Returns:
-            List of mock backlinks
-        """
-        # Generate random domains based on the target domain
-        domain_base = domain.replace(".", "")
-
-        backlinks = []
-        categories = ["technology", "news", "business", "marketing", "education"]
-        link_types = ["dofollow", "nofollow"]
-        anchors = [
-            "click here",
-            domain,
-            "website",
-            "learn more",
-            "official site",
-            "great resource",
-            "recommended tool",
-            "best solution",
-        ]
-
-        # Generate mock data
-        for i in range(30):
-            category = categories[i % len(categories)]
-            source_domain = f"blog-{i}.{category}-{domain_base[:5]}.com"
-
-            backlinks.append(
-                {
-                    "source_url": f"https://{source_domain}/article-{i}",
-                    "source_domain": source_domain,
-                    "target_url": f"https://{domain}/page-{i % 10}",
-                    "anchor_text": anchors[i % len(anchors)],
-                    "link_type": link_types[i % len(link_types)],
-                    "domain_authority": 20 + (i % 60),  # DA between 20-80
-                    "first_seen": f"2023-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}",
-                    "category": category,
-                }
-            )
-
-        return backlinks
+        # TODO: Implement Semrush API integration
+        # For now, this is a placeholder that would make actual API calls
+        raise NotImplementedError(
+            "Semrush API integration not yet implemented. Please use Ahrefs API or implement Semrush integration."
+        )
 
     def _get_domain_metrics(self, domain: str) -> Dict[str, Any]:
         """Get domain metrics like authority, trust, etc.
@@ -233,18 +185,9 @@ class BacklinkAnalyzer:
         Returns:
             Dictionary of domain metrics
         """
-        # This would use APIs in a real implementation
-        # For now, generate mock metrics
-        import random
-
-        return {
-            "domain_authority": random.randint(20, 90),
-            "page_authority": random.randint(20, 90),
-            "trust_flow": random.randint(10, 70),
-            "citation_flow": random.randint(10, 70),
-            "referring_domains": random.randint(100, 5000),
-            "total_backlinks": random.randint(1000, 50000),
-        }
+        # TODO: Implement actual domain metrics API integration
+        # This would use Ahrefs, Semrush, or Moz APIs in a real implementation
+        raise NotImplementedError("Domain metrics API integration not yet implemented.")
 
     def _find_opportunities(
         self, domain: str, competitors: List[str]

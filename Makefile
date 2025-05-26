@@ -26,9 +26,7 @@ test-integration:
 test-cov:
 	poetry run pytest --cov=seo_agent --cov-report=term --cov-report=xml --cov-report=html
 
-# Run the mock demo without API keys
-mock:
-	poetry run python tests/mock/simple_keyword_demo.py --seed "digital marketing" --industry "saas" --auto-csv
+
 
 all: format lint typecheck test
 

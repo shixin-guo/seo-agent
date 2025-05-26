@@ -91,97 +91,23 @@ export default function SiteAuditor() {
     }, 500);
 
     try {
-      // In a real implementation, this would call the actual API
-      // For now, simulating the response
-      setTimeout(() => {
-        const mockIssues: Issue[] = [
-          {
-            type: "missing_meta_description",
-            severity: "medium",
-            affected_pages: [`https://${domain}/about`, `https://${domain}/contact`],
-            description: "Pages missing meta descriptions",
-          },
-          {
-            type: "slow_page_speed",
-            severity: "high",
-            affected_pages: [`https://${domain}/products`],
-            description: "Pages with slow loading times",
-          },
-          {
-            type: "missing_alt_tags",
-            severity: "low",
-            affected_pages: [`https://${domain}/gallery`, `https://${domain}/blog/post1`],
-            description: "Images missing alt text",
-          },
-          {
-            type: "broken_links",
-            severity: "high",
-            affected_pages: [`https://${domain}/resources/old-page`],
-            description: "Pages with broken links",
-          },
-        ];
+      const response = await fetch('http://localhost:8000/api/audit-site', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ domain, max_pages: maxPages }),
+      });
 
-        const mockRecommendations: Recommendation[] = issuesWithSeverity.map((issue) => ({
-          issue_type: issue.type,
-          priority: issue.severity,
-          recommendation: `Fix ${issue.type.replace(/_/g, " ")} on affected pages`,
-          affected_pages: issue.affected_pages,
-        }));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-        const mockResult: SiteAuditResult = {
-          domain,
-          pages_crawled: maxPages,
-          total_issues: mockIssues.length,
-          issues_by_severity: {
-            high: mockIssues.filter((i) => i.severity === "high").length,
-            medium: mockIssues.filter((i) => i.severity === "medium").length,
-            low: mockIssues.filter((i) => i.severity === "low").length,
-          },
-          issues: mockIssues,
-          recommendations: mockRecommendations,
-          broken_links: [`https://${domain}/resources/old-page`],
-          summary: {
-            total_pages: maxPages,
-            total_issues: mockIssues.length,
-            severity_counts: {
-              high: mockIssues.filter((i) => i.severity === "high").length,
-              medium: mockIssues.filter((i) => i.severity === "medium").length,
-              low: mockIssues.filter((i) => i.severity === "low").length,
-            },
-          },
-          action_plan: `# SEO Action Plan for ${domain}
-
-## High Priority Items
-
-- Fix slow page speed on https://${domain}/products
-- Fix broken links on https://${domain}/resources/old-page
-
-## Medium Priority Items
-
-- Add meta descriptions to https://${domain}/about and https://${domain}/contact
-
-## Low Priority Items
-
-- Add alt text to images on https://${domain}/gallery and https://${domain}/blog/post1
-`,
-        };
-
-        clearInterval(progressInterval);
-        setProgress(100);
-        setResults(mockResult);
-        setIsLoading(false);
-      }, 3000);
-
-      // Actual API call would look like this:
-      // const response = await fetch('http://localhost:8000/api/audit-site', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ domain, max_pages: maxPages }),
-      // })
-      // const data = await response.json()
-      // clearInterval(progressInterval)
+      const data = await response.json();
+      clearInterval(progressInterval);
+      setProgress(100);
+      setResults(data);
+      setIsLoading(false);
       // setProgress(100)
       // setResults(data)
     } catch (error) {

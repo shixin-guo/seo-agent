@@ -85,15 +85,12 @@ SERPAPI_KEY=your_key_here
 AHREFS_API_KEY=your_key_here
 ```
 
-### Mock Development
+### API Key Setup
 
 ```bash
-# Use mock data
-poetry run python tests/mock/simple_keyword_demo.py
-
-# Or configure in config.yaml
-testing:
-  use_mock_data: true
+# Set up API keys in .env
+touch .env
+echo "OPENAI_API_KEY=your_key_here" >> .env
 ```
 
 ## Docker Development
@@ -141,10 +138,10 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-### Mock API Responses
+### Environment Variables
 ```bash
-# Use mock integration
-poetry run python tests/mock/mock_integration.py
+# Check API keys are set
+echo $OPENAI_API_KEY
 ```
 
 ## Contributing

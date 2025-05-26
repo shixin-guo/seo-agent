@@ -72,50 +72,6 @@ export default function KeywordResearch() {
           ? error.message
           : "Failed to generate keywords. Please check API keys and try again.",
       );
-
-      // Only use mock data in development for testing UI
-      if (process.env.NODE_ENV === "development") {
-        console.info("Using mock data for development");
-        const mockResponse: KeywordResponse = {
-          seed_keyword: seedKeyword,
-          industry: industry || "Not specified",
-          total_keywords: 15,
-          keywords: Array(15)
-            .fill(null)
-            .map((_, i) => {
-              const intentTypes = ["informational", "commercial", "transactional", "navigational"];
-              const competitionLevels = ["low", "medium", "high"];
-              return {
-                keyword: `${seedKeyword} for ${["beginners", "experts", "businesses", "startups", "enterprises"][i % 5]}`,
-                intent: intentTypes[i % intentTypes.length],
-                competition: competitionLevels[i % competitionLevels.length],
-              };
-            }),
-          intent_groups: {
-            informational: [
-              `What is ${seedKeyword}`,
-              `${seedKeyword} tutorial`,
-              `${seedKeyword} guide`,
-            ],
-            commercial: [
-              `Best ${seedKeyword}`,
-              `Top ${seedKeyword} providers`,
-              `${seedKeyword} pricing`,
-            ],
-            transactional: [
-              `Buy ${seedKeyword}`,
-              `${seedKeyword} services`,
-              `Hire ${seedKeyword} expert`,
-            ],
-            navigational: [
-              `${seedKeyword} website`,
-              `${seedKeyword} login`,
-              `${seedKeyword} support`,
-            ],
-          },
-        };
-        setResults(mockResponse);
-      }
     } finally {
       setIsLoading(false);
     }

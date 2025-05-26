@@ -36,13 +36,6 @@ class KeywordResearchOutput(Protocol):
     keywords: str | List[KeywordData]
 
 
-# Define type for mock data structure
-class MockKeywordResponse(TypedDict):
-    """Type definition for mock keyword response."""
-
-    keywords: List[KeywordData]
-
-
 class KeywordGenerator(dspy.Module):
     """A module for generating SEO keyword ideas using language models.
 
@@ -61,14 +54,12 @@ class KeywordGenerator(dspy.Module):
         self.model_name = config.get("ai", {}).get("model", "gpt-4-turbo-preview")
         self.max_tokens = config.get("ai", {}).get("max_tokens", 2000)
         self.temperature = config.get("ai", {}).get("temperature", 0.3)
-        self.use_mock = config.get("testing", {}).get("use_mock_data", False)
-
         # Configure DSPy
         api_key = os.environ.get("OPENAI_API_KEY") or config.get("apis", {}).get(
             "openai_key"
         )
 
-        if not api_key and not self.use_mock:
+        if not api_key:
             logger.error("No OpenAI API key found in environment variables or config!")
             logger.warning(
                 "Set OPENAI_API_KEY environment variable or add 'openai_key' to config.yaml"
@@ -93,16 +84,6 @@ class KeywordGenerator(dspy.Module):
         Returns:
             A list of dictionaries containing keyword suggestions with their properties.
         """
-        # For testing, explicitly use mock data if configured
-        if self.use_mock:
-            logger.info("Using mock data as configured in settings")
-            from tests.mock.mock_keyword_data import generate_mock_keywords
-
-            mock_data_result = generate_mock_keywords(
-                seed_keyword, industry or "general"
-            )
-            mock_data = cast(MockKeywordResponse, mock_data_result)
-            return mock_data["keywords"]
 
         # Define the signature for the LM
         class KeywordResearch(dspy.Signature):
@@ -168,31 +149,13 @@ class KeywordGenerator(dspy.Module):
                     return parsed_keywords
 
                 except json.JSONDecodeError as e:
-                    # Log detailed error info but don't fall back to mock data by default
+                    # Log detailed error info and raise error
                     logger.error(f"JSON decode error: {str(e)}")
                     logger.error(f"Problematic JSON: {json_str[:500]}...")
-
-                    # Only use mock data if explicitly allowed in config
-                    if self.config.get("fallbacks", {}).get(
-                        "allow_mock_on_error", False
-                    ):
-                        logger.warning(
-                            "Using mock data as fallback due to JSON parsing error"
-                        )
-                        from tests.mock.mock_keyword_data import generate_mock_keywords
-
-                        fallback_data_result = generate_mock_keywords(
-                            seed_keyword, industry or "general"
-                        )
-                        fallback_data = cast(MockKeywordResponse, fallback_data_result)
-                        return fallback_data["keywords"]
-                    else:
-                        logger.error(
-                            "Failed to parse keywords and mock fallback is disabled"
-                        )
-                        raise ValueError(
-                            "Failed to parse keyword data from API response"
-                        )
+                    logger.error("Failed to parse keywords from API response")
+                    raise ValueError(
+                        f"Failed to parse keyword data from API response: {str(e)}"
+                    )
 
             # Ensure the returned value is the correct type
             if isinstance(dspy_result.keywords, list):
@@ -208,20 +171,8 @@ class KeywordGenerator(dspy.Module):
 
         except Exception as e:
             logger.error(f"Error generating keywords: {str(e)}")
-
-            # Only use mock data if explicitly allowed in config
-            if self.config.get("fallbacks", {}).get("allow_mock_on_error", False):
-                logger.warning("Using mock data as fallback due to API error")
-                from tests.mock.mock_keyword_data import generate_mock_keywords
-
-                error_data_result = generate_mock_keywords(
-                    seed_keyword, industry or "general"
-                )
-                error_data = cast(MockKeywordResponse, error_data_result)
-                return error_data["keywords"]
-            else:
-                # Re-raise the exception if we don't want to fall back to mock data
-                raise
+            # Re-raise the exception
+            raise
 
 
 # Define type structures for other modules

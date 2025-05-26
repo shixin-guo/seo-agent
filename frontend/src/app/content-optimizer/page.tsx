@@ -93,68 +93,36 @@ export default function ContentOptimizer() {
 
     setIsLoading(true);
     try {
-      // In a real implementation, this would call the actual API
-      // For now, simulating the response
-      setTimeout(() => {
-        const mockAnalysis: ContentAnalysis = {
-          word_count: content.split(/\s+/).filter(Boolean).length,
-          keyword_density: {
-            seo: { count: 5, density: 2.5 },
-            content: { count: 8, density: 4.0 },
-            optimization: { count: 3, density: 1.5 },
-          },
-          readability: "medium",
-          headings: (content.match(/^#+\s+.+$/gm) || []).length,
-          meta_tags: {},
-          avg_word_length: 5.2,
-        };
+      const formData = new FormData();
+      if (file) {
+        formData.append('content_file', file);
+      } else {
+        const contentBlob = new Blob([content], { type: 'text/plain' });
+        formData.append('content_file', contentBlob, 'content.txt');
+      }
 
-        const mockSuggestions: ContentSuggestion[] = [
-          { type: "heading", suggestion: "Add more headings to structure your content better." },
-          { type: "keyword", suggestion: "Increase usage of keywords: SEO, optimization." },
-          {
-            type: "readability",
-            suggestion:
-              "Content has a medium readability score. Consider simplifying some sentences.",
-          },
-        ];
+      if (keywordsFile) {
+        formData.append('keywords_file', keywordsFile);
+      }
 
-        const mockResponse: ContentOptimizationResult = {
-          original_content: content,
-          optimized_content: `# SEO OPTIMIZATION NOTES\nThe following suggestions should be applied to improve SEO:\n\n1. [HEADING] Add more headings to structure your content better.\n2. [KEYWORD] Increase usage of keywords: SEO, optimization.\n3. [READABILITY] Content has a medium readability score. Consider simplifying some sentences.\n\n${content}`,
-          analysis: mockAnalysis,
-          suggestions: mockSuggestions,
-        };
+      formData.append('use_advanced', useAdvanced.toString());
+      formData.append('creative', creative.toString());
 
-        setResults(mockResponse);
-        setIsLoading(false);
-        setActiveTab("results");
-      }, 2000);
+      const response = await fetch('http://localhost:8000/api/optimize-content', {
+        method: 'POST',
+        body: formData,
+      });
 
-      // Actual API call would look like this:
-      // const formData = new FormData()
-      // if (file) {
-      //   formData.append('content_file', file)
-      // } else {
-      //   const contentBlob = new Blob([content], { type: 'text/plain' })
-      //   formData.append('content_file', contentBlob, 'content.txt')
-      // }
-      //
-      // if (keywordsFile) {
-      //   formData.append('keywords_file', keywordsFile)
-      // }
-      //
-      // formData.append('use_advanced', useAdvanced.toString())
-      // formData.append('creative', creative.toString())
-      //
-      // const response = await fetch('http://localhost:8000/api/optimize-content', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
-      // const data = await response.json()
-      // setResults(data)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setResults(data);
+      setActiveTab("results");
     } catch (error) {
       console.error("Error optimizing content:", error);
+      // You might want to show an error message to the user here
     } finally {
       setIsLoading(false);
     }

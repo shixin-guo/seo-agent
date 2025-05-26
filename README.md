@@ -164,17 +164,6 @@ Keyword research endpoint response:
 }
 ```
 
-### Testing Without API Keys
-
-You can enable mock data mode for testing without consuming API credits:
-
-```yaml
-# In config.yaml
-testing:
-  use_mock_data: true
-```
-
-This will make all API endpoints use mock data instead of making real API calls.
 
 ## Configuration
 
@@ -202,7 +191,7 @@ Required API keys depend on the endpoints you use:
 - **Backlink Analysis**: OpenAI API key, Ahrefs API key (optional)
 - **Site Auditing**: OpenAI API key
 
-> **Important:** The API will return HTTP 500 errors if required API keys are missing, unless mock mode is enabled in configuration.
+> **Important:** The API will return HTTP 500 errors if required API keys are missing.
 
 ### Configuration File
 
@@ -227,21 +216,12 @@ apis:
   ahrefs_key: ""
   semrush_key: ""
 
-# Testing Settings
-testing:
-  # Set to true to use mock data instead of real API calls
-  use_mock_data: false
-
-# Fallback Settings
-fallbacks:
-  # Controls whether to fall back to mock data on API errors
-  allow_mock_on_error: false
 ```
 
 Key configuration options:
-- **`testing.use_mock_data`**: Enable mock mode for testing without API calls
-- **`fallbacks.allow_mock_on_error`**: Whether to use mock data when API calls fail
 - **`ai.temperature`**: Controls AI response creativity (0.0-1.0)
+- **`defaults.max_keywords`**: Maximum number of keywords to generate
+- **`defaults.crawl_depth`**: Maximum pages to crawl during site audits
 
 ## Development
 
@@ -254,7 +234,7 @@ This project uses the following tools to maintain code quality:
 - **pre-commit**: Git hooks for automated checks
 - **pytest**: Testing framework
 - **pytest-cov**: Test coverage reporting
-- **pytest-mock**: Mocking support for tests
+- **pytest-asyncio**: Async testing support
 
 ### Setup Development Environment
 
@@ -289,13 +269,13 @@ make all  # Run all checks
 
 ### Running Tests
 
-The project uses pytest for testing with a comprehensive test suite covering all core modules and API endpoints. The test suite includes unit tests for all functionality with proper mocking of external dependencies.
+The project uses pytest for testing with a comprehensive test suite covering all core modules and API endpoints. The test suite includes unit tests for all functionality with proper handling of external dependencies.
 
 #### Test Structure
 
 - **Unit Tests**: Tests for individual components in isolation
 - **Integration Tests**: Tests for component interactions
-- **Mock Tests**: Separate tests using mock data for development without API keys
+- **API Tests**: Tests for API endpoint functionality
 
 #### Test Command Reference
 
