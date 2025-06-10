@@ -89,11 +89,11 @@ class ArticleDatabase:
 
         if article_id is None:
             raise ValueError("Failed to create article - no ID returned")
-        
+
         result = self.get_article(article_id)
         if result is None:
             raise ValueError("Failed to retrieve created article")
-        
+
         return result
 
     def get_article(self, article_id: int) -> Optional[Article]:
