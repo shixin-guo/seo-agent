@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Search, Settings, FileText, Link2, BarChart2 } from "lucide-react";
+import { Search, Settings, FileText, Link2, BarChart2, BookOpen } from "lucide-react";
 
 export function MainNav() {
   const pathname = usePathname();
@@ -63,6 +63,18 @@ export function MainNav() {
           <div className="flex items-center space-x-2">
             <Link2 className="h-4 w-4" />
             <span>Backlink Analyzer</span>
+          </div>
+        </Link>
+        <Link
+          href="/cms"
+          className={cn(
+            "text-sm font-medium transition-colors hover:text-primary",
+            pathname.startsWith("/cms") ? "text-primary" : "text-muted-foreground",
+          )}
+        >
+          <div className="flex items-center space-x-2">
+            <BookOpen className="h-4 w-4" />
+            <span>Content Management</span>
           </div>
         </Link>
       </nav>

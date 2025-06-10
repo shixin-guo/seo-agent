@@ -132,3 +132,164 @@ export async function checkApiStatus() {
     return false;
   }
 }
+
+/**
+ * Article management API functions
+ */
+
+export interface Article {
+  id?: number;
+  title: string;
+  content: string;
+  keywords: string[];
+  meta_description?: string;
+  status: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ArticleGenerateRequest {
+  seed_keyword: string;
+  industry?: string;
+  title?: string;
+  min_length?: number;
+}
+
+export async function getArticles(limit = 100, offset = 0, status?: string) {
+  try {
+    const params = new URLSearchParams({
+      limit: limit.toString(),
+      offset: offset.toString(),
+    });
+    
+    if (status) {
+      params.append("status", status);
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/articles?${params}`);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    throw error;
+  }
+}
+
+export async function getArticle(id: number) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    throw error;
+  }
+}
+
+export async function createArticle(article: Omit<Article, "id" | "created_at" | "updated_at">) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(article),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating article:", error);
+    throw error;
+  }
+}
+
+export async function updateArticle(id: number, article: Partial<Article>) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(article),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating article:", error);
+    throw error;
+  }
+}
+
+export async function deleteArticle(id: number) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting article:", error);
+    throw error;
+  }
+}
+
+export async function generateArticle(request: ArticleGenerateRequest) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error generating article:", error);
+    throw error;
+  }
+}
+
+export async function searchArticles(query: string, limit = 50) {
+  try {
+    const params = new URLSearchParams({
+      q: query,
+      limit: limit.toString(),
+    });
+
+    const response = await fetch(`${API_BASE_URL}/api/articles/search?${params}`);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error searching articles:", error);
+    throw error;
+  }
+}

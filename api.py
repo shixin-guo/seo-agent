@@ -17,6 +17,8 @@ from pydantic import BaseModel
 
 # Import core modules and utilities
 from seo_agent.core.keyword_engine import KeywordEngine
+from seo_agent.core.database import Article, ArticleDatabase
+from seo_agent.core.article_generator import ArticleGenerator
 from utils import load_config
 
 # Add project root to Python path
@@ -62,6 +64,29 @@ class BacklinkAnalysisRequest(BaseModel):
     domain: str
     competitors: Optional[List[str]] = None
     generate_templates: bool = False
+
+
+class ArticleRequest(BaseModel):
+    title: str
+    content: str
+    keywords: List[str] = []
+    meta_description: Optional[str] = None
+    status: str = "draft"
+
+
+class ArticleGenerateRequest(BaseModel):
+    seed_keyword: str
+    industry: Optional[str] = None
+    title: Optional[str] = None
+    min_length: int = 800
+
+
+class ArticleUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    keywords: Optional[List[str]] = None
+    meta_description: Optional[str] = None
+    status: Optional[str] = None
 
 
 # API routes
@@ -199,6 +224,118 @@ async def analyze_backlinks(request: BacklinkAnalysisRequest) -> Dict[str, Any]:
             results["templates"] = templates
 
         return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+config = load_config()
+article_db = ArticleDatabase(config)
+article_generator = ArticleGenerator(config)
+
+
+@app.get("/api/articles")
+async def get_articles(limit: int = 100, offset: int = 0, status: Optional[str] = None):
+    """Get list of articles with pagination."""
+    try:
+        articles = article_db.get_articles(limit=limit, offset=offset, status=status)
+        return {"articles": articles, "total": len(articles)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/articles/{article_id}")
+async def get_article(article_id: int):
+    """Get a specific article by ID."""
+    try:
+        article = article_db.get_article(article_id)
+        if not article:
+            raise HTTPException(status_code=404, detail="Article not found")
+        return article
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/articles")
+async def create_article(request: ArticleRequest):
+    """Create a new article."""
+    try:
+        article = Article(
+            title=request.title,
+            content=request.content,
+            keywords=request.keywords,
+            meta_description=request.meta_description,
+            status=request.status
+        )
+        created_article = article_db.create_article(article)
+        return created_article
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.put("/api/articles/{article_id}")
+async def update_article(article_id: int, request: ArticleUpdateRequest):
+    """Update an existing article."""
+    try:
+        existing_article = article_db.get_article(article_id)
+        if not existing_article:
+            raise HTTPException(status_code=404, detail="Article not found")
+        
+        updated_data = existing_article.dict()
+        for field, value in request.dict(exclude_unset=True).items():
+            if value is not None:
+                updated_data[field] = value
+        
+        updated_article = Article(**updated_data)
+        result = article_db.update_article(article_id, updated_article)
+        
+        if not result:
+            raise HTTPException(status_code=404, detail="Article not found")
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/articles/{article_id}")
+async def delete_article(article_id: int):
+    """Delete an article."""
+    try:
+        deleted = article_db.delete_article(article_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Article not found")
+        return {"message": "Article deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/articles/generate")
+async def generate_article(request: ArticleGenerateRequest):
+    """Generate a new article from keywords."""
+    try:
+        article = article_generator.generate_article_from_keywords(
+            seed_keyword=request.seed_keyword,
+            industry=request.industry,
+            title=request.title,
+            min_length=request.min_length
+        )
+        created_article = article_db.create_article(article)
+        return created_article
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/articles/search")
+async def search_articles(q: str, limit: int = 50):
+    """Search articles by title or content."""
+    try:
+        articles = article_db.search_articles(query=q, limit=limit)
+        return {"articles": articles, "total": len(articles)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
