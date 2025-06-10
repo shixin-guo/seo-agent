@@ -62,8 +62,8 @@ class BacklinkAnalyzer:
         # Placeholder implementation
         templates = {}
         for i, opp in enumerate(opportunities):
-            templates[
-                f"template_{i+1}.txt"
-            ] = f"Subject: Partnership Opportunity\n\nHello,\n\nI noticed you link to {opp['source']}..."
+            templates[f"template_{i + 1}.txt"] = (
+                f"Subject: Partnership Opportunity\n\nHello,\n\nI noticed you link to {opp['source']}..."
+            )
 
         return templates

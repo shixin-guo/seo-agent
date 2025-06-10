@@ -73,31 +73,36 @@ def get_user_subscription_status(user_id: str) -> Dict[str, Any]:
         db_path = os.path.join(os.path.dirname(__file__), "frontend", "dev.db")
         if not os.path.exists(db_path):
             return {"planType": "FREE", "subscriptionStatus": None}
-        
+
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        
-        cursor.execute("""
+
+        cursor.execute(
+            """
             SELECT planType, subscriptionStatus, planEndDate, monthlyCredits, usedCredits
             FROM user WHERE id = ?
-        """, (user_id,))
-        
+        """,
+            (user_id,),
+        )
+
         result = cursor.fetchone()
         conn.close()
-        
+
         if not result:
             return {"planType": "FREE", "subscriptionStatus": None}
-        
-        plan_type, subscription_status, plan_end_date, monthly_credits, used_credits = result
-        
+
+        plan_type, subscription_status, plan_end_date, monthly_credits, used_credits = (
+            result
+        )
+
         if plan_end_date and datetime.now().timestamp() * 1000 > plan_end_date:
             return {"planType": "FREE", "subscriptionStatus": "expired"}
-        
+
         return {
             "planType": plan_type or "FREE",
             "subscriptionStatus": subscription_status,
             "monthlyCredits": monthly_credits or 0,
-            "usedCredits": used_credits or 0
+            "usedCredits": used_credits or 0,
         }
     except Exception as e:
         print(f"Error checking subscription status: {e}")
@@ -108,7 +113,7 @@ def verify_session_token(authorization: Optional[str] = Header(None)) -> Optiona
     """Verify NextAuth session token and return user ID."""
     if not authorization or not authorization.startswith("Bearer "):
         return None
-    
+
     try:
         token = authorization.replace("Bearer ", "")
         decoded = jwt.decode(token, options={"verify_signature": False})
@@ -123,21 +128,21 @@ def require_subscription(user_id: Optional[str] = Depends(verify_session_token))
     """Dependency to require active subscription for advanced features."""
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
-    
+
     subscription_info = get_user_subscription_status(user_id)
-    
+
     if subscription_info["planType"] == "FREE":
         raise HTTPException(
-            status_code=403, 
-            detail="This feature requires a paid subscription. Please upgrade your plan."
+            status_code=403,
+            detail="This feature requires a paid subscription. Please upgrade your plan.",
         )
-    
+
     if subscription_info["subscriptionStatus"] not in ["active", "trialing"]:
         raise HTTPException(
             status_code=403,
-            detail="Your subscription is not active. Please check your billing status."
+            detail="Your subscription is not active. Please check your billing status.",
         )
-    
+
     return user_id
 
 
@@ -150,7 +155,7 @@ async def root() -> Dict[str, str]:
 
 @app.get("/api/validate-subscription")
 async def validate_subscription(
-    user_id: Optional[str] = Depends(verify_session_token)
+    user_id: Optional[str] = Depends(verify_session_token),
 ) -> Dict[str, Any]:
     """Validate user subscription status."""
     if not user_id:
@@ -158,15 +163,14 @@ async def validate_subscription(
             "authenticated": False,
             "planType": "FREE",
             "subscriptionStatus": None,
-            "canUseAdvanced": False
+            "canUseAdvanced": False,
         }
-    
+
     subscription_info = get_user_subscription_status(user_id)
-    can_use_advanced = (
-        subscription_info["planType"] != "FREE" and 
-        subscription_info["subscriptionStatus"] in ["active", "trialing"]
-    )
-    
+    can_use_advanced = subscription_info["planType"] != "FREE" and subscription_info[
+        "subscriptionStatus"
+    ] in ["active", "trialing"]
+
     return {
         "authenticated": True,
         "userId": user_id,
@@ -174,7 +178,7 @@ async def validate_subscription(
         "subscriptionStatus": subscription_info["subscriptionStatus"],
         "monthlyCredits": subscription_info.get("monthlyCredits", 0),
         "usedCredits": subscription_info.get("usedCredits", 0),
-        "canUseAdvanced": can_use_advanced
+        "canUseAdvanced": can_use_advanced,
     }
 
 
@@ -221,20 +225,23 @@ async def optimize_content(
                 if subscription_info["planType"] == "FREE":
                     raise HTTPException(
                         status_code=403,
-                        detail="Advanced content optimization requires a paid subscription. Please upgrade your plan."
+                        detail="Advanced content optimization requires a paid subscription. Please upgrade your plan.",
                     )
-                if subscription_info["subscriptionStatus"] not in ["active", "trialing"]:
+                if subscription_info["subscriptionStatus"] not in [
+                    "active",
+                    "trialing",
+                ]:
                     raise HTTPException(
                         status_code=403,
-                        detail="Your subscription is not active. Please check your billing status."
+                        detail="Your subscription is not active. Please check your billing status.",
                     )
             else:
                 # No authentication provided, but advanced features requested
                 raise HTTPException(
                     status_code=401,
-                    detail="Authentication required for advanced content optimization."
+                    detail="Authentication required for advanced content optimization.",
                 )
-            
+
             # Use advanced optimizer
             from seo_agent.core.advanced_content_optimizer import (
                 AdvancedContentOptimizer,

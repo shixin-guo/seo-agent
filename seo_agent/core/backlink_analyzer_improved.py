@@ -238,9 +238,9 @@ class BacklinkAnalyzer:
                     opportunity = backlink.copy()
                     opportunity["competitor"] = comp_domain
                     opportunity["opportunity_type"] = "competitor_backlink"
-                    opportunity[
-                        "opportunity_score"
-                    ] = self._calculate_opportunity_score(backlink)
+                    opportunity["opportunity_score"] = (
+                        self._calculate_opportunity_score(backlink)
+                    )
                     opportunities.append(opportunity)
 
         # Sort opportunities by score (descending)
