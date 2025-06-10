@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { TRPCProvider } from "@/components/providers/trpc-provider";
-import { SessionProvider } from "next-auth/react";
+import { ClientSessionProvider } from "@/components/providers/session-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type * as React from "react";
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SessionProvider>
+        <ClientSessionProvider>
           <TRPCProvider>
             <ThemeProvider
               attribute="class"
@@ -32,7 +32,7 @@ export default function RootLayout({
               {children}
             </ThemeProvider>
           </TRPCProvider>
-        </SessionProvider>
+        </ClientSessionProvider>
       </body>
     </html>
   );
