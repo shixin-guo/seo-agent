@@ -23,7 +23,13 @@ def load_config() -> Dict[str, Any]:
         os.path.dirname(os.path.abspath(__file__)), "config.yaml"
     )
     with open(config_path) as f:
-        config = yaml.safe_load(f)
+        loaded_config = yaml.safe_load(f)
+
+    config: Dict[str, Any]
+    if not isinstance(loaded_config, dict):
+        config = {}
+    else:
+        config = loaded_config
 
     # Add API keys from environment variables
     api_keys = {

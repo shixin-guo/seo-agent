@@ -112,7 +112,8 @@ def verify_session_token(authorization: Optional[str] = Header(None)) -> Optiona
     try:
         token = authorization.replace("Bearer ", "")
         decoded = jwt.decode(token, options={"verify_signature": False})
-        return decoded.get("sub")  # User ID is typically in 'sub' field
+        user_id = decoded.get("sub")
+        return user_id if isinstance(user_id, str) else None
     except Exception as e:
         print(f"Error verifying session token: {e}")
         return None
