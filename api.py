@@ -9,14 +9,19 @@ including keyword research, content optimization, site auditing, and backlink an
 import os
 import sys
 import time
+import uuid
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 # Import core modules and utilities
 from seo_agent.core.keyword_engine import KeywordEngine
+from seo_agent.core.database import ArticleDatabase, Image
+from seo_agent.core.image_alt_generator import ImageAltGenerator
 from utils import load_config
 
 # Add project root to Python path
@@ -38,6 +43,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+config = load_config()
+db = ArticleDatabase(config)
+image_generator = None
+
+try:
+    image_generator = ImageAltGenerator(config)
+except ValueError:
+    pass
 
 
 # Pydantic models for API requests/responses
@@ -62,6 +76,25 @@ class BacklinkAnalysisRequest(BaseModel):
     domain: str
     competitors: Optional[List[str]] = None
     generate_templates: bool = False
+
+
+class ImageUploadResponse(BaseModel):
+    id: int
+    filename: str
+    original_name: str
+    alt_text: Optional[str]
+    file_size: int
+    mime_type: str
+    created_at: str
+
+
+class ImageListResponse(BaseModel):
+    images: List[ImageUploadResponse]
+    total: int
+
+
+class AltTextUpdateRequest(BaseModel):
+    alt_text: str
 
 
 # API routes
@@ -201,6 +234,182 @@ async def analyze_backlinks(request: BacklinkAnalysisRequest) -> Dict[str, Any]:
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/images/upload", response_model=ImageUploadResponse)
+async def upload_image(file: UploadFile = File(...)) -> ImageUploadResponse:
+    """Upload an image and generate alt text."""
+    if not image_generator:
+        raise HTTPException(
+            status_code=503,
+            detail="Image processing service unavailable - OpenAI API key required",
+        )
+
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image")
+
+    allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image type. Allowed: {', '.join(allowed_types)}",
+        )
+
+    images_dir = Path("./data/images")
+    images_dir.mkdir(parents=True, exist_ok=True)
+
+    file_extension = Path(file.filename or "image").suffix or ".jpg"
+    unique_filename = f"{uuid.uuid4()}{file_extension}"
+    file_path = images_dir / unique_filename
+
+    try:
+        content = await file.read()
+
+        if len(content) > 10 * 1024 * 1024:
+            raise HTTPException(
+                status_code=400, detail="File size too large (max 10MB)"
+            )
+
+        with open(file_path, "wb") as f:
+            f.write(content)
+
+        validation = image_generator.validate_image(str(file_path))
+        if not validation["valid"]:
+            file_path.unlink(missing_ok=True)
+            raise HTTPException(
+                status_code=400, detail=f"Invalid image: {validation['error']}"
+            )
+
+        alt_text = image_generator.generate_alt_text(str(file_path))
+
+        image_record = Image(
+            filename=unique_filename,
+            original_name=file.filename or "unknown",
+            alt_text=alt_text,
+            file_path=str(file_path),
+            file_size=len(content),
+            mime_type=file.content_type,
+        )
+
+        created_image = db.create_image(image_record)
+
+        return ImageUploadResponse(
+            id=created_image.id or 0,
+            filename=created_image.filename,
+            original_name=created_image.original_name,
+            alt_text=created_image.alt_text,
+            file_size=created_image.file_size,
+            mime_type=created_image.mime_type,
+            created_at=created_image.created_at.isoformat()
+            if created_image.created_at
+            else "",
+        )
+
+    except HTTPException:
+        file_path.unlink(missing_ok=True)
+        raise
+    except Exception as e:
+        file_path.unlink(missing_ok=True)
+        raise HTTPException(
+            status_code=500, detail=f"Failed to process image: {str(e)}"
+        )
+
+
+@app.get("/api/images", response_model=ImageListResponse)
+async def list_images(limit: int = 50, offset: int = 0) -> ImageListResponse:
+    """List uploaded images with pagination."""
+    images = db.get_images(limit=limit, offset=offset)
+
+    image_responses = []
+    for img in images:
+        image_responses.append(
+            ImageUploadResponse(
+                id=img.id or 0,
+                filename=img.filename,
+                original_name=img.original_name,
+                alt_text=img.alt_text,
+                file_size=img.file_size,
+                mime_type=img.mime_type,
+                created_at=img.created_at.isoformat() if img.created_at else "",
+            )
+        )
+
+    return ImageListResponse(images=image_responses, total=len(image_responses))
+
+
+@app.get("/api/images/{image_id}")
+async def get_image(image_id: int) -> ImageUploadResponse:
+    """Get specific image details."""
+    image = db.get_image(image_id)
+    if not image:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return ImageUploadResponse(
+        id=image.id or 0,
+        filename=image.filename,
+        original_name=image.original_name,
+        alt_text=image.alt_text,
+        file_size=image.file_size,
+        mime_type=image.mime_type,
+        created_at=image.created_at.isoformat() if image.created_at else "",
+    )
+
+
+@app.get("/api/images/{image_id}/file")
+async def get_image_file(image_id: int) -> FileResponse:
+    """Serve the actual image file."""
+    image = db.get_image(image_id)
+    if not image:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    file_path = Path(image.file_path)
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Image file not found")
+
+    return FileResponse(
+        path=str(file_path),
+        media_type=image.mime_type,
+        filename=image.original_name,
+    )
+
+
+@app.put("/api/images/{image_id}/alt-text", response_model=ImageUploadResponse)
+async def update_image_alt_text(
+    image_id: int, request: AltTextUpdateRequest
+) -> ImageUploadResponse:
+    """Update alt text for an image."""
+    updated_image = db.update_image_alt_text(image_id, request.alt_text)
+    if not updated_image:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return ImageUploadResponse(
+        id=updated_image.id or 0,
+        filename=updated_image.filename,
+        original_name=updated_image.original_name,
+        alt_text=updated_image.alt_text,
+        file_size=updated_image.file_size,
+        mime_type=updated_image.mime_type,
+        created_at=updated_image.created_at.isoformat()
+        if updated_image.created_at
+        else "",
+    )
+
+
+@app.delete("/api/images/{image_id}")
+async def delete_image(image_id: int) -> Dict[str, str]:
+    """Delete an image."""
+    image = db.get_image(image_id)
+    if not image:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    file_path = Path(image.file_path)
+    file_path.unlink(missing_ok=True)
+
+    deleted = db.delete_image(image_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return {"message": "Image deleted successfully"}
 
 
 # Run app with uvicorn
