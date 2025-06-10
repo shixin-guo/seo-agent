@@ -5,7 +5,7 @@ from seo_agent.core.database import ArticleDatabase, Article
 from utils import load_config
 
 
-def test_database() -> bool:
+def test_database() -> None:
     """Test database operations."""
     print("Testing database functionality...")
 
@@ -24,24 +24,18 @@ def test_database() -> bool:
     created = db.create_article(test_article)
     print(f"✓ Article created with ID: {created.id}")
 
-    if created.id is None:
-        print("✗ Created article has no ID")
-        return False
+    assert created.id is not None, "Created article has no ID"
         
     retrieved = db.get_article(created.id)
-    if retrieved and retrieved.title == test_article.title:
-        print("✓ Article retrieved successfully")
-    else:
-        print("✗ Failed to retrieve article")
-        return False
+    assert retrieved is not None, "Failed to retrieve article"
+    assert retrieved.title == test_article.title, "Retrieved article title doesn't match"
+    print("✓ Article retrieved successfully")
     
     retrieved.status = "published"
     updated = db.update_article(created.id, retrieved)
-    if updated and updated.status == "published":
-        print("✓ Article updated successfully")
-    else:
-        print("✗ Failed to update article")
-        return False
+    assert updated is not None, "Failed to update article"
+    assert updated.status == "published", "Article status not updated correctly"
+    print("✓ Article updated successfully")
 
     articles = db.get_articles(limit=10)
     if len(articles) > 0:
@@ -62,7 +56,6 @@ def test_database() -> bool:
         print("✗ Failed to delete test article")
 
     print("Database test completed successfully!")
-    return True
 
 
 if __name__ == "__main__":
