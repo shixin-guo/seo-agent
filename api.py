@@ -234,7 +234,7 @@ article_generator = ArticleGenerator(config)
 
 
 @app.get("/api/articles")
-async def get_articles(limit: int = 100, offset: int = 0, status: Optional[str] = None):
+async def get_articles(limit: int = 100, offset: int = 0, status: Optional[str] = None) -> dict:
     """Get list of articles with pagination."""
     try:
         articles = article_db.get_articles(limit=limit, offset=offset, status=status)
@@ -244,7 +244,7 @@ async def get_articles(limit: int = 100, offset: int = 0, status: Optional[str] 
 
 
 @app.get("/api/articles/{article_id}")
-async def get_article(article_id: int):
+async def get_article(article_id: int) -> Article:
     """Get a specific article by ID."""
     try:
         article = article_db.get_article(article_id)
@@ -258,7 +258,7 @@ async def get_article(article_id: int):
 
 
 @app.post("/api/articles")
-async def create_article(request: ArticleRequest):
+async def create_article(request: ArticleRequest) -> Article:
     """Create a new article."""
     try:
         article = Article(
@@ -266,7 +266,7 @@ async def create_article(request: ArticleRequest):
             content=request.content,
             keywords=request.keywords,
             meta_description=request.meta_description,
-            status=request.status
+            status=request.status,
         )
         created_article = article_db.create_article(article)
         return created_article
@@ -275,24 +275,24 @@ async def create_article(request: ArticleRequest):
 
 
 @app.put("/api/articles/{article_id}")
-async def update_article(article_id: int, request: ArticleUpdateRequest):
+async def update_article(article_id: int, request: ArticleUpdateRequest) -> Article:
     """Update an existing article."""
     try:
         existing_article = article_db.get_article(article_id)
         if not existing_article:
             raise HTTPException(status_code=404, detail="Article not found")
-        
+
         updated_data = existing_article.dict()
         for field, value in request.dict(exclude_unset=True).items():
             if value is not None:
                 updated_data[field] = value
-        
+
         updated_article = Article(**updated_data)
         result = article_db.update_article(article_id, updated_article)
-        
+
         if not result:
             raise HTTPException(status_code=404, detail="Article not found")
-        
+
         return result
     except HTTPException:
         raise
@@ -301,7 +301,7 @@ async def update_article(article_id: int, request: ArticleUpdateRequest):
 
 
 @app.delete("/api/articles/{article_id}")
-async def delete_article(article_id: int):
+async def delete_article(article_id: int) -> dict:
     """Delete an article."""
     try:
         deleted = article_db.delete_article(article_id)
@@ -315,14 +315,14 @@ async def delete_article(article_id: int):
 
 
 @app.post("/api/articles/generate")
-async def generate_article(request: ArticleGenerateRequest):
+async def generate_article(request: ArticleGenerateRequest) -> Article:
     """Generate a new article from keywords."""
     try:
         article = article_generator.generate_article_from_keywords(
             seed_keyword=request.seed_keyword,
             industry=request.industry,
             title=request.title,
-            min_length=request.min_length
+            min_length=request.min_length,
         )
         created_article = article_db.create_article(article)
         return created_article
@@ -331,7 +331,7 @@ async def generate_article(request: ArticleGenerateRequest):
 
 
 @app.get("/api/articles/search")
-async def search_articles(q: str, limit: int = 50):
+async def search_articles(q: str, limit: int = 50) -> dict:
     """Search articles by title or content."""
     try:
         articles = article_db.search_articles(query=q, limit=limit)
