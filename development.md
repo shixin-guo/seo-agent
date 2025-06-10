@@ -160,3 +160,11 @@ echo $OPENAI_API_KEY
 - Implement request timeouts
 - Use connection pooling for multiple requests
 - Monitor memory usage with large datasets
+
+## Documentation Generation
+
+```bash
+# Generate LLM-friendly documentation files
+make docs
+python scripts/build_llm_docs.py
+```
