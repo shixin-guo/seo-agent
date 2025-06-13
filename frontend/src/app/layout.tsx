@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { TRPCProvider } from "@/components/providers/trpc-provider";
+import { ClientSessionProvider } from "@/components/providers/session-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type * as React from "react";
@@ -19,14 +21,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <ClientSessionProvider>
+          <TRPCProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </TRPCProvider>
+        </ClientSessionProvider>
       </body>
     </html>
   );

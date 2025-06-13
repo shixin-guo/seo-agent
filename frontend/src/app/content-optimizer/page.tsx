@@ -13,6 +13,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertTriangle,
   BarChart,
@@ -26,6 +27,9 @@ import {
 } from "lucide-react";
 import type * as React from "react";
 import { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { trpc } from "@/lib/trpc";
+import { PriceModal } from "@/components/PriceModal";
 
 interface ContentAnalysis {
   word_count: number;
@@ -59,8 +63,14 @@ export default function ContentOptimizer() {
   const [creative, setCreative] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [keywordsFile, setKeywordsFile] = useState<File | null>(null);
+  const [showPriceModal, setShowPriceModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const keywordsFileInputRef = useRef<HTMLInputElement>(null);
+  
+  const { data: session } = useSession();
+  const { data: userInfo } = trpc.user.getUserInfo.useQuery(undefined, {
+    enabled: !!session?.user,
+  });
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -90,6 +100,11 @@ export default function ContentOptimizer() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content && !file) {
+      return;
+    }
+
+    if (useAdvanced && (!session || !userInfo || userInfo.planType === 'FREE')) {
+      setShowPriceModal(true);
       return;
     }
 
@@ -214,9 +229,14 @@ export default function ContentOptimizer() {
                     <div className="space-y-6">
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <label htmlFor="advanced" className="text-sm font-medium">
-                            Advanced AI Optimization
-                          </label>
+                          <div className="flex items-center gap-2">
+                            <label htmlFor="advanced" className="text-sm font-medium">
+                              Advanced AI Optimization
+                            </label>
+                            {(!session || !userInfo || userInfo.planType === 'FREE') && (
+                              <Badge variant="secondary" className="text-xs">Pro</Badge>
+                            )}
+                          </div>
                           <p className="text-xs text-muted-foreground">
                             Use advanced AI to generate fully optimized content.
                           </p>
@@ -450,6 +470,11 @@ export default function ContentOptimizer() {
           </Tabs>
         </div>
       </main>
+      
+      <PriceModal 
+        isOpen={showPriceModal} 
+        onClose={() => setShowPriceModal(false)} 
+      />
     </div>
   );
 }

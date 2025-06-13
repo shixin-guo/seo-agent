@@ -5,14 +5,14 @@ init:
 	poetry run pre-commit install
 
 lint:
-	poetry run ruff check seo_agent main.py --extend-exclude tests/
+	poetry run ruff check seo_agent api.py cli.py utils.py --extend-exclude tests/
 
 format:
-	poetry run ruff format seo_agent main.py
-	poetry run ruff check --fix seo_agent main.py
+	poetry run ruff format seo_agent api.py cli.py utils.py
+	poetry run ruff check --fix seo_agent api.py cli.py utils.py
 
 typecheck:
-	poetry run mypy seo_agent main.py
+	poetry run mypy seo_agent api.py cli.py utils.py
 
 test:
 	poetry run pytest

@@ -89,7 +89,7 @@ class ReportGenerator:
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Keyword Research Report - {keyword_data.get('seed_keyword', 'Keywords')}</title>
+            <title>Keyword Research Report - {keyword_data.get("seed_keyword", "Keywords")}</title>
             <style>
                 body {{ font-family: Arial, sans-serif; margin: 20px; }}
                 h1, h2, h3 {{ color: #333; }}
@@ -105,9 +105,9 @@ class ReportGenerator:
             <h1>Keyword Research Report</h1>
             <div class="section">
                 <h2>Overview</h2>
-                <p><strong>Seed Keyword:</strong> {keyword_data.get('seed_keyword', 'N/A')}</p>
-                <p><strong>Industry:</strong> {keyword_data.get('industry', 'N/A')}</p>
-                <p><strong>Total Keywords:</strong> {keyword_data.get('total_keywords', 0)}</p>
+                <p><strong>Seed Keyword:</strong> {keyword_data.get("seed_keyword", "N/A")}</p>
+                <p><strong>Industry:</strong> {keyword_data.get("industry", "N/A")}</p>
+                <p><strong>Total Keywords:</strong> {keyword_data.get("total_keywords", 0)}</p>
             </div>
 
             <div class="section">
@@ -145,9 +145,9 @@ class ReportGenerator:
         for kw in keyword_data.get("keywords", []):
             html += f"""
                     <tr>
-                        <td>{kw.get('keyword', 'N/A')}</td>
-                        <td>{kw.get('intent', 'N/A')}</td>
-                        <td>{kw.get('competition', 'N/A')}</td>
+                        <td>{kw.get("keyword", "N/A")}</td>
+                        <td>{kw.get("intent", "N/A")}</td>
+                        <td>{kw.get("competition", "N/A")}</td>
                     </tr>
             """
 
