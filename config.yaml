@@ -20,3 +20,10 @@ apis:
   serpapi_key: ""
   ahrefs_key: ""
   semrush_key: ""
+
+database:
+  type: "sqlite"
+  url: "./data/articles.db"
+  cloudflare_d1:
+    database_id: ""
+    api_token: ""
