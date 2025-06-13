@@ -11,7 +11,6 @@ import logging
 from typing import Any, Optional, List, Dict, TypedDict, Protocol, cast
 
 import dspy
-from dspy.clients.lm import LM
 
 # Configure logging
 logging.basicConfig(
@@ -36,7 +35,7 @@ class KeywordResearchOutput(Protocol):
     keywords: str | List[KeywordData]
 
 
-class KeywordGenerator(dspy.Module):
+class KeywordGenerator:
     """A module for generating SEO keyword ideas using language models.
 
     Uses DSPy to interface with LLMs for generating keyword suggestions based on
@@ -49,7 +48,7 @@ class KeywordGenerator(dspy.Module):
         Args:
             config: Configuration dictionary containing AI model and API settings.
         """
-        super().__init__()
+
         self.config = config
         self.model_name = config.get("ai", {}).get("model", "gpt-4-turbo-preview")
         self.max_tokens = config.get("ai", {}).get("max_tokens", 2000)
@@ -70,7 +69,7 @@ class KeywordGenerator(dspy.Module):
 
         if api_key:
             logger.info(f"Configuring DSPy with model: {self.model_name}")
-            dspy.settings.configure(lm=LM(model=self.model_name, api_key=api_key))
+            dspy.settings.configure(lm=dspy.LM(model=self.model_name, api_key=api_key))
 
     def generate_keywords(
         self, seed_keyword: str, industry: Optional[str] = None
@@ -201,7 +200,7 @@ class SiteAuditResult(TypedDict):
     recommendations: List[str]
 
 
-class ContentOptimizer(dspy.Module):
+class ContentOptimizer:
     """A module for optimizing content for SEO using language models.
 
     Provides content optimization suggestions based on target keywords
@@ -214,7 +213,7 @@ class ContentOptimizer(dspy.Module):
         Args:
             config: Configuration dictionary containing AI model and API settings.
         """
-        super().__init__()
+
         self.config = config
         self.model_name = config.get("ai", {}).get("model", "gpt-4-turbo-preview")
 
@@ -223,7 +222,7 @@ class ContentOptimizer(dspy.Module):
             "openai_key"
         )
         if api_key:
-            dspy.settings.configure(lm=LM(model=self.model_name, api_key=api_key))
+            dspy.settings.configure(lm=dspy.LM(model=self.model_name, api_key=api_key))
 
     def optimize_content(
         self, content: str, target_keywords: List[str]
@@ -245,7 +244,7 @@ class ContentOptimizer(dspy.Module):
         }
 
 
-class BacklinkAnalyzer(dspy.Module):
+class BacklinkAnalyzer:
     """A module for analyzing backlink opportunities using language models.
 
     Analyzes backlink profiles and identifies opportunities based on
@@ -258,7 +257,7 @@ class BacklinkAnalyzer(dspy.Module):
         Args:
             config: Configuration dictionary containing AI model and API settings.
         """
-        super().__init__()
+
         self.config = config
 
         # Configure DSPy
@@ -267,7 +266,7 @@ class BacklinkAnalyzer(dspy.Module):
         )
         if api_key:
             dspy.settings.configure(
-                lm=LM(model=self.config["ai"]["model"], api_key=api_key)
+                lm=dspy.LM(model=self.config["ai"]["model"], api_key=api_key)
             )
 
     def analyze_backlinks(
@@ -290,7 +289,7 @@ class BacklinkAnalyzer(dspy.Module):
         }
 
 
-class SiteAuditor(dspy.Module):
+class SiteAuditor:
     """A module for performing technical SEO audits using language models.
 
     Analyzes websites for technical SEO issues and provides improvement recommendations.
@@ -302,7 +301,7 @@ class SiteAuditor(dspy.Module):
         Args:
             config: Configuration dictionary containing AI model and API settings.
         """
-        super().__init__()
+
         self.config = config
 
         # Configure DSPy
@@ -311,7 +310,7 @@ class SiteAuditor(dspy.Module):
         )
         if api_key:
             dspy.settings.configure(
-                lm=LM(model=self.config["ai"]["model"], api_key=api_key)
+                lm=dspy.LM(model=self.config["ai"]["model"], api_key=api_key)
             )
 
     def audit_site(self, domain: str, max_pages: int = 50) -> SiteAuditResult:
@@ -339,7 +338,7 @@ class ContentOptimizationOutput(Protocol):
     optimized_content: Optional[str]
 
 
-class AIContentGenerator(dspy.Module):
+class AIContentGenerator:
     """A module for generating optimized content using language models.
 
     Uses DSPy to interface with LLMs for creating SEO-friendly content based on
@@ -352,7 +351,7 @@ class AIContentGenerator(dspy.Module):
         Args:
             config: Configuration dictionary containing AI model and API settings.
         """
-        super().__init__()
+
         self.config = config
         self.model_name = config.get("ai", {}).get("model", "gpt-4-turbo-preview")
         self.max_tokens = config.get("ai", {}).get("max_tokens", 3000)
@@ -379,7 +378,7 @@ class AIContentGenerator(dspy.Module):
             if random_seed is not None:
                 lm_config["seed"] = random_seed
 
-            dspy.settings.configure(lm=LM(**lm_config))
+            dspy.settings.configure(lm=dspy.LM(**lm_config))
 
     def generate_optimized_content(
         self, original_content: str, instructions: str
