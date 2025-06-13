@@ -30,6 +30,8 @@ interface KeywordResponse {
   intent_groups: Record<string, string[]>;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+debugger
 export default function KeywordResearch() {
   const [seedKeyword, setSeedKeyword] = useState("");
   const [industry, setIndustry] = useState("");
@@ -48,7 +50,7 @@ export default function KeywordResearch() {
 
     try {
       // Make API call to backend
-      const response = await fetch("http://localhost:8000/api/keywords", {
+      const response = await fetch(`${API_BASE_URL}/api/keywords`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

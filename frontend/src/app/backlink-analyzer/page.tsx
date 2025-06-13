@@ -54,6 +54,8 @@ interface BacklinkAnalysisResult {
   templates?: Record<string, string>;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function BacklinkAnalyzer() {
   const [domain, setDomain] = useState("");
   const [competitors, setCompetitors] = useState("");
@@ -72,7 +74,7 @@ export default function BacklinkAnalyzer() {
     setIsLoading(true);
     try {
       const competitorsList = competitors.split(",").map(c => c.trim()).filter(Boolean);
-      const response = await fetch('http://localhost:8000/api/backlink-analysis', {
+      const response = await fetch(`${API_BASE_URL}/api/backlink-analysis`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -3,22 +3,22 @@
 import { MainNav } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    AlertCircle,
-    BarChart2,
-    Download,
-    ExternalLink
+  AlertCircle,
+  BarChart2,
+  Download,
+  ExternalLink
 } from "lucide-react";
 import type * as React from "react";
 import { useState } from "react";
@@ -61,6 +61,8 @@ interface SiteAuditResult {
   action_plan: string;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function SiteAuditor() {
   const [domain, setDomain] = useState("");
   const [maxPages, setMaxPages] = useState(50);
@@ -91,7 +93,7 @@ export default function SiteAuditor() {
     }, 500);
 
     try {
-      const response = await fetch('http://localhost:8000/api/audit-site', {
+      const response = await fetch(`${API_BASE_URL}/api/audit-site`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -48,6 +48,8 @@ interface ContentOptimizationResult {
   suggestions: ContentSuggestion[];
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function ContentOptimizer() {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -108,7 +110,7 @@ export default function ContentOptimizer() {
       formData.append('use_advanced', useAdvanced.toString());
       formData.append('creative', creative.toString());
 
-      const response = await fetch('http://localhost:8000/api/optimize-content', {
+      const response = await fetch(`${API_BASE_URL}/api/optimize-content`, {
         method: 'POST',
         body: formData,
       });

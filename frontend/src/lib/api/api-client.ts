@@ -2,7 +2,7 @@
  * API client for interacting with the SEO Agent backend.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /**
  * Generates keyword research based on a seed keyword.
