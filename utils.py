@@ -4,7 +4,7 @@ This module provides common functionality used by both CLI and API components.
 """
 
 import os
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 import yaml
 from dotenv import load_dotenv
@@ -24,6 +24,9 @@ def load_config() -> Dict[str, Any]:
     )
     with open(config_path) as f:
         config = yaml.safe_load(f)
+        if config is None:
+            config = {}
+        config = dict(config)
 
     # Add API keys from environment variables
     api_keys = {
@@ -41,4 +44,4 @@ def load_config() -> Dict[str, Any]:
         config["apis"] = {}
     config["apis"].update(api_keys)
 
-    return config
+    return cast(Dict[str, Any], config)

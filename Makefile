@@ -1,4 +1,4 @@
-.PHONY: init lint format typecheck test mock clean
+.PHONY: init lint format typecheck test mock clean docs docs-check
 
 init:
 	poetry install --with dev
@@ -26,7 +26,14 @@ test-integration:
 test-cov:
 	poetry run pytest --cov=seo_agent --cov-report=term --cov-report=xml --cov-report=html
 
+docs:
+	python scripts/build_llm_docs.py
 
+docs-check: docs
+	@echo "Checking generated documentation files..."
+	@test -f llm.txt || (echo "llm.txt not found" && exit 1)
+	@test -f llm-full.txt || (echo "llm-full.txt not found" && exit 1)
+	@echo "Documentation files generated successfully"
 
 all: format lint typecheck test
 

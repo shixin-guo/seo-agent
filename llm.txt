@@ -1,0 +1,24 @@
+# SEO Agent
+
+> SEO Agent is a comprehensive AI-powered SEO automation tool designed to streamline and enhance search engine optimization workflows. It serves SEO professionals, content marketers, digital agencies, and website owners by providing intelligent analysis and recommendations across four core SEO domains: keyword research, content optimization, technical site auditing, and backlink analysis.
+
+The tool leverages advanced AI capabilities through the DSPy framework and OpenAI's language models to deliver actionable insights that traditionally require manual expertise and time-consuming analysis. Users can interact with the system through multiple interfaces - a command-line interface for automation and scripting, a REST API for programmatic integration, and a modern web application for interactive use.
+
+Key capabilities include:
+- **Intelligent Keyword Research**: Expands seed keywords using AI to identify related terms, analyze search intent, and assess competition levels
+- **Content Optimization**: Analyzes existing content and provides AI-powered suggestions for SEO improvement
+- **Technical SEO Auditing**: Crawls websites to identify technical issues and provides prioritized action plans
+- **Backlink Analysis**: Identifies backlink opportunities and generates personalized outreach templates
+
+This documentation covers all aspects of SEO Agent from installation and usage to development and deployment.
+
+
+## Overview
+- [SEO AI Agent](https://github.com/shixin-guo/seo-agent/blob/main/README.md)
+
+## Development
+- [Next Steps for SEO Agent](https://github.com/shixin-guo/seo-agent/blob/main/NEXT_STEPS.md)
+- [Development Guide](https://github.com/shixin-guo/seo-agent/blob/main/development.md)
+
+## Frontend
+- [SEO Agent UI](https://github.com/shixin-guo/seo-agent/blob/main/frontend/README.md)
